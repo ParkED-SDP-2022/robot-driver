@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import imp
 import rospy
 import numpy as np
 from std_msgs.msg import String
@@ -22,15 +23,9 @@ class subscribe:
     def parse(self, raw_data):
         x = raw_data['x']
         y = raw_data['y']
-        if y is 0:
-            self.md.tmpSetDecision('none')
-        elif y > 10:
-            self.md.tmpSetDecision('left')
-        elif y < -10:
-            self.md.tmpSetDecision('right')
             
         self.md.setSpeed(x)
-        self.md.move()
+        self.md.setTurningAngle(y)
         if x is 0 and y is 0:
             self.md.motorStop()
 
