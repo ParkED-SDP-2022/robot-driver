@@ -20,7 +20,6 @@ class Manual_testing:
         # initialize the node named image_processing
         rospy.init_node('Manual_testing', anonymous=True)
         self.cmd_velPub = rospy.Publisher("/cmd_vel", String ,queue_size = 1)
-        self.pbridge = CvBridge()
         rate = rospy.Rate(50)  # 5hz
         # record the beginning time
         stime = rospy.get_time()
