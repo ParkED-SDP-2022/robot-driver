@@ -1,11 +1,10 @@
 #!/usr/bin/env python
+import imp
 import rospy
 import numpy as np
 from std_msgs.msg import String
-import sys
 import json
-sys.path.append('..')
-from firmware.MotorDriver import MotorDriver
+from firmware.MotorDriver import *
 
 
 class subscribe:
@@ -24,14 +23,9 @@ class subscribe:
     def parse(self, raw_data):
         x = raw_data['x']
         y = raw_data['y']
-        if y is 0:
-            self.md.decision('none')
-        elif y < 0:
-            self.md.decision('left')
-        else:
-            self.md.decision('right')
+            
         self.md.setSpeed(x)
-        self.md.move()
+        self.md.setTurningAngle(y)
         if x is 0 and y is 0:
             self.md.motorStop()
 
