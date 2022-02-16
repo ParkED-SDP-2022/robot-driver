@@ -2,8 +2,11 @@
 import rospy
 import numpy as np
 from std_msgs.msg import String
-from firmware.MotorDriver import MotorDriver
+import sys
 import json
+sys.path.append('..')
+import firmware.MotorDriver
+
 
 class subscribe:
 
