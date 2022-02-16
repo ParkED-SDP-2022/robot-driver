@@ -28,7 +28,7 @@ class MotorDriver():
         for i in self.motorLeft:
             self.mc.move_motor(i, self.drivingSpeed*self.turningAngle*0.1)
         for i in self.motorRight:
-            self.mc.move_motor(i, self.dr0, 1, 3ivingSpeed*self.turningAngle*0.1)
+            self.mc.move_motor(i, self.drivingSpeed*self.turningAngle*0.1)
         self.__encoderOut()
         
     def __turnAngularLeft(self):
