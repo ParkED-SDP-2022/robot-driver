@@ -3,10 +3,8 @@ import imp
 import rospy
 import numpy as np
 from std_msgs.msg import String
-import sys
 import json
-sys.path.append('..')
-from firmware.MotorDriver import MotorDriver
+from firmware.MotorDriver import *
 
 
 class subscribe:
@@ -26,11 +24,12 @@ class subscribe:
         x = raw_data['x']
         y = raw_data['y']
         if y is 0:
-            self.md.decision('none')
-        elif y < 0:
-            self.md.decision('left')
-        else:
-            self.md.decision('right')
+            self.md.tmpSetDecision('none')
+        elif y > 10:
+            self.md.tmpSetDecision('left')
+        elif y < -10:
+            self.md.tmpSetDecision('right')
+            
         self.md.setSpeed(x)
         self.md.move()
         if x is 0 and y is 0:

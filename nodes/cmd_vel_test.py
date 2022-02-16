@@ -20,8 +20,9 @@ class Manual_testing:
         stime = rospy.get_time()
         while not rospy.is_shutdown():
             
-            x = random.randrange(15,20)
-            y = random.randrange(0,4)
+            x = random.randrange(40,100)
+            y = random.randrange(-40,40)
+            y = 0
             cmd_vel = {'x': x, 'y': y}
             
             cmd_velData = json.dumps(cmd_vel)
