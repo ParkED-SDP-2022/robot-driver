@@ -1,11 +1,12 @@
 #!/usr/bin/env python
+import imp
 import rospy
 import numpy as np
 from std_msgs.msg import String
 import sys
 import json
 sys.path.append('..')
-import firmware.MotorDriver
+from firmware.MotorDriver import MotorDriver
 
 
 class subscribe:
