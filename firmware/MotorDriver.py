@@ -7,8 +7,8 @@ class MotorDriver():
         print("Initialising Motor Controller")
         self.mc = Motors() 
         self.motorLeft = [0, 2, 5]
-        self.motorRight = [1, 3, 4]
-        self.naturalDirection = [1,1,1,1,-1,-1]
+        self.motorRight = [1, 4, 2]
+        self.naturalDirection = [1,1,1,1,1,1]
         self.targetDistance = 0
         self.heading = 0
         self.targetHeading = 0
@@ -98,7 +98,7 @@ class MotorDriver():
     #Test only function
     def setTurningAngle(self, angle):
         self.turningAngle = angle
-        self._angleResolution()
+        self.__angleResolution()
         
                                    
     def getEncoderData():

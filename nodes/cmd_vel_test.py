@@ -29,7 +29,7 @@ class Manual_testing:
             print("|Speed = "+ str(self.x) + " & Angular = " + str(self.y) + "|")
             key = raw_input("|Speed = "+ str(self.x) + " & Angular = " + str(self.y) + "|")
             if key is "x":
-                self.x -= 10
+                self.x += -10
             if key is "s":
                 self.x = 0
                 self.y = 0
@@ -38,10 +38,10 @@ class Manual_testing:
             if key is "d":
                 self.y += 10
             if key is "a":
-                self.y -= 10
-            self.y = self.y % 100
-            self.x = self.x % 100
-            cmd_vel = {'x': x, 'y': y}
+                self.y += -10
+            self.y = self.y % 110
+            self.x = self.x % 110
+            cmd_vel = {'x': self.x, 'y': self.y}
             
             cmd_velData = json.dumps(cmd_vel)
             self.cmd_velPub.publish(cmd_velData)
