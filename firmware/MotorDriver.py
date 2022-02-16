@@ -6,7 +6,6 @@ class MotorDriver():
     def __init__(self):
         print("Initialising Motor Controller")
         self.mc = Motors() 
-        self.run_time = 5        # number of seconds to run motors 
         self.motorLeft = [0, 1, 3]
         self.motorRight = [2, 4, 5]
         self.targetDistance = 0
@@ -22,17 +21,15 @@ class MotorDriver():
             self.mc.move_motor(i, self.drivingSpeed)
         for i in self.motorRight:
             self.mc.move_motor(i, -self.drivingSpeed)
-        run_time = 1
-        self.__encoderOut(run_time)
+        self.__encoderOut()
 
     def __turnAngularRight(self):
         print("Turning right")
         for i in self.motorLeft:
             self.mc.move_motor(i, self.drivingSpeed*self.turningAngle*0.1)
         for i in self.motorRight:
-            self.mc.move_motor(i, self.drivingSpeed*self.turningAngle*0.1)
-        run_time = 1
-        self.__encoderOut(run_time)
+            self.mc.move_motor(i, self.dr0, 1, 3ivingSpeed*self.turningAngle*0.1)
+        self.__encoderOut()
         
     def __turnAngularLeft(self):
         print("Turning left")
@@ -40,18 +37,17 @@ class MotorDriver():
             self.mc.move_motor(i, -self.drivingSpeed*self.turningAngle*0.1)
         for i in self.motorRight:
             self.mc.move_motor(i, -self.drivingSpeed*self.turningAngle*0.1)
-        run_time = 1
-        self.__encoderOut(run_time)
+        self.__encoderOut()
 
-    def __encoderOut(self, run_time):
+    def __encoderOut(self):
     # Encoder board can be fragile - always use a try/except loop
         start_time = time()
-        while time() < start_time + run_time:
-            try:
-              self.mc.print_encoder_data() 
-              sleep(0.2)     # Use a sleep of at least 0.1, to avoid errors
-            except:
-                print("encoderError")
+       #while time() < start_time + run_time:
+        try:
+          self.mc.print_encoder_data() 
+          sleep(0.2)     # Use a sleep of at least 0.1, to avoid errors
+        except:
+            print("encoderError")
           
     def motorStop(self):
         print("Stopping")
