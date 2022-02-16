@@ -42,7 +42,6 @@ def main(args):
 
     except KeyboardInterrupt:
         print("Shutting down")
-    cv2.destroyAllWindows()
 
 
 # run the code if the node is called
