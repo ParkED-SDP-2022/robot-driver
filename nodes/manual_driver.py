@@ -1,13 +1,7 @@
-#!/usr/bin/env python3
-
-# import imp
-from curses import raw
-from multiprocessing.spawn import import_main_path
-from shutil import move
+#!/usr/bin/env python
 import rospy
 import numpy as np
 from std_msgs.msg import String
-from std_msgs.msg import Float64MultiArray, Float64
 from firmware.MotorDriver import MotorDriver
 import json
 

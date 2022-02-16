@@ -6,14 +6,16 @@ class MotorDriver():
     def __init__(self):
         print("Initialising Motor Controller")
         self.mc = Motors() 
-        self.motorLeft = [0, 1, 3]
-        self.motorRight = [2, 4, 5]
+        self.motorLeft = [0, 4, 5]
+        self.motorRight = [1, 2, 3]
+        self.naturalDirection = [1,1,1,1,-1,-1]
         self.targetDistance = 0
         self.heading = 0
         self.targetHeading = 0
         self.drivingSpeed = 0
         self.currHeading = 0
         self.decision = "none"
+        self.turningAngle = 0
     
     def __forwardSpd(self):
         print("Driving Forward & spd:"+str(self.drivingSpeed))
@@ -55,15 +57,22 @@ class MotorDriver():
     
     def __verifyHeading(self):
         print("Verifying")
-        #CODE HERE TO VERIFY THEHEADINGANDMAKE THECORRECT TURNING DESCISION
+        #CODE HERE TO VERIFY THE HEADING AND MAKE THECORRECT TURNING DESCISION
+        if self.heading - self.targetHeading < -180:
+            self.targetHeading - 180
+        elif self.heading - self.targetHeading > 180:
+            self.targetHeading + 180
+        self.turningAngle = self.heading - self.targetHeading
         
     def move(self):
         print("Deciding")
         if self.decision == "left":
             print("Left")
+            self.__verifyHeading()
             self.__turnAngularLeft()
         elif self.decision == "right":
             print("Right")
+            self.__verifyHeading()
             self.__turnAngularRight()
         else:
             print("Forward")
@@ -90,3 +99,14 @@ class MotorDriver():
     def tmpSetDecision(self, turn):
         print("make Decision Manual")
         self.decision = turn
+        
+    def motorTest(self):
+        for i in range(0,6,1):
+            self.mc.move_motor(i, -50*self.naturalDirection[i])
+            run_time = 2
+            strtTime = time()
+            while time()< strtTime + run_time:
+                print(str(i))
+                self.__encoderOut()
+            self.motorStop()
+        

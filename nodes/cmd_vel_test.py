@@ -1,15 +1,10 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import json
-from typing import Dict
 import random
-from numpy.lib.function_base import angle
-import roslib
-import sys
 import rospy
+import sys
 from std_msgs.msg import String
-from sensor_msgs.msg import Image
-from std_msgs.msg import Float64MultiArray, Float64
 
 
 class Manual_testing:
@@ -20,13 +15,13 @@ class Manual_testing:
         # initialize the node named image_processing
         rospy.init_node('Manual_testing', anonymous=True)
         self.cmd_velPub = rospy.Publisher("/cmd_vel", String ,queue_size = 1)
-        rate = rospy.Rate(50)  # 5hz
+        rate = rospy.Rate(500)  # 50hz
         # record the beginning time
         stime = rospy.get_time()
         while not rospy.is_shutdown():
             
-            x = random.randrange(10,20)
-            y = random.randrange(0,1)
+            x = random.randrange(15,20)
+            y = random.randrange(0,4)
             cmd_vel = {'x': x, 'y': y}
             
             cmd_velData = json.dumps(cmd_vel)
