@@ -1,7 +1,7 @@
 from motors import Motors 
 from time import time, sleep 
 
-class MotorDriver()
+class MotorDriver:
     
     def __init__():
         mc = Motors() 
