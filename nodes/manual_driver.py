@@ -27,7 +27,16 @@ class subscribe:
     def parse(self, raw_data):
         x = raw_data['x']
         y = raw_data['y']
-        return 0
+        if y is 0:
+            self.md.decision('none')
+        elif y < 0:
+            self.md.decision('left')
+        else:
+            self.md.decision('right')
+        self.md.setSpeed(x)
+        self.md.move()
+        if x is 0 and y is 0:
+            self.md.motorStop()
 
 
 
