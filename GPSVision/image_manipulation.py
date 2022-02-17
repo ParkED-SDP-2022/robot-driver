@@ -43,12 +43,12 @@ class Image_processes:
         
         #code here to correct lens distortion in 4 images from the camera feed
         
-        roboCoords = self.imageSplicing(images)
+        roboCoords = self.imageStitch(images)
         return robotCoords
     
-    def imageSplicing(self, images):
+    def imageStitch(self, images):
     
-        #code here to splice images together from the camera feed
+        #code here to stitch images together from the camera feed
         
         roboCoords = self.colourSpaceCoordinate(image)
         return robotCoords
@@ -107,4 +107,6 @@ class Image_processes:
             ctr = np.array(list_of_pts).reshape((-1,1,2)).astype(np.int32)
             ctr = cv2.convexHull(ctr)
             return ctr
-
+    
+    def sdpPixelToDegrees(self):
+        
