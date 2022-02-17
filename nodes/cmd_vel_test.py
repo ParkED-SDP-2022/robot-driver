@@ -26,7 +26,6 @@ class Manual_testing:
         # record the beginning time
         stime = rospy.get_time()
         while not rospy.is_shutdown():
-            print("|Speed = "+ str(self.x) + " & Angular = " + str(self.y) + "|")
             key = raw_input("|Speed = "+ str(self.x) + " & Angular = " + str(self.y) + "|")
             if key is "x":
                 self.x += -10

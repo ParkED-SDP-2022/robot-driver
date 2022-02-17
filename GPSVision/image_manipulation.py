@@ -24,10 +24,10 @@ class Image_processes:
         height, width = img.shape[:2]
 
         # Cropping images
-        cropped_image1 = img[0        :width/4,   0:height/4]
-        cropped_image2 = img[width/4  :width*2/4, 0:height/4]
-        cropped_image3 = img[width*2/4:width*3/4, 0:height/4]
-        cropped_image4 = img[width*3/4:width*4/4, 0:height/4]
+        cropped_image1 = img[0        :width/2,   0        :height/2]
+        cropped_image2 = img[width/2  :width  ,   0        :height/2]
+        cropped_image3 = img[0        :width/2,   height/2 :height  ]
+        cropped_image4 = img[width*/2 :width  ,   height/2 :height  ]
 
         images = [cropped_image1, cropped_image2, cropped_image3, cropped_image4]
         
