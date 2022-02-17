@@ -1,9 +1,17 @@
-import Ultrasonic
+from Ultrasonic import UltrasonicSensor
+import time
 
-uS = Ultrasonic()
+uS = UltrasonicSensor()
+# uS.setupForward()
+# uS.setupBackward()
 
-print(uS.distanceForward())
+try:
+    while True:
+        print("Object "+str(uS.distanceForward())+"cm Forward")
+        time.sleep(0.2)
+        print("Object "+str(uS.distanceBackward())+"cm Backwards")
+        time.sleep(0.2)
 
-print(uS.distanceBackward())
-
-uS.shutdown()
+except KeyboardInterrupt:
+    print("Measurement stopped by User")
+    GPIO.cleanup()
