@@ -4,7 +4,8 @@ import rospy
 import numpy as np
 from std_msgs.msg import String
 import json
-from firmware.MotorDriver import *
+from BenchOS.firmware.MotorControllers.MotorDriver import MotorDriver
+from BenchOS.firmware.UltrasonicControllers.Ultrasonic import UltrasonicSensor
 
 
 class subscribe:

@@ -16,10 +16,9 @@ class image_converter:
   # Defines publisher and subscriber
   def __init__(self):
       
-    self.yzCentres = None
-    self.cv_image1 = None
+    self.robotPosition = None
     # initialize the node named image_processing
-    rospy.init_node('camera_processor', anonymous=True)
+    rospy.init_node('GPSVideo_Processor', anonymous=True)
     # initialize a publisher to send xz coordinates
     self.pos_pub = rospy.Publisher("robot_position", String ,queue_size = 1)
     
@@ -36,7 +35,7 @@ class image_converter:
 
         # Recieve the image
         try:
-            imageprocessor1 = Image_processes()
+            imP = Image_processes()
             
             #record image frames
             ret, frame = cap.read()
@@ -45,8 +44,8 @@ class image_converter:
 
         # Publish the results
         try: 
-            robotPositon,self.cv_image1 = imageprocessor1.imProcess(cv_image1_ps)
-            self.pos_pub.publish(json.dumps({'bench1': robotPosition}))
+            self.robotPosition = imP.runProcessor(frame)
+            self.pos_pub.publish(json.dumps({'bench1': self.robotPosition}))
           
         except CvBridgeError as e:
           print(e)

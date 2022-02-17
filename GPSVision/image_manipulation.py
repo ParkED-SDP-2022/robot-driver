@@ -8,9 +8,12 @@ class Image_processes:
 
     def _init_(self):
         return       
-
+    
+    def runProcessor(self,frame):
+        return imageSegmentation(frame)
+    
     # Perform image processing
-    def imageSegmentation(self, image):
+    def __imageSegmentation(self, image):
     
         img = image
         
@@ -36,24 +39,23 @@ class Image_processes:
             cv2.waitKey(1000)
             cv2.destroyAllWindows()
         
-        roboCoords = self.distortionCorrection(images)
-        return robotCoords
+        return self.distortionCorrection(images)
+        
     
-    def distortionCorrection(self, images):
+    def __distortionCorrection(self, images):
         
         #code here to correct lens distortion in 4 images from the camera feed
         
-        roboCoords = self.imageStitch(images)
-        return robotCoords
+        return self.imageStitch(images)
     
-    def imageStitch(self, images):
+    def __imageStitch(self, images):
     
         #code here to stitch images together from the camera feed
         
-        roboCoords = self.colourSpaceCoordinate(image)
-        return robotCoords
+        return self.colourSpaceCoordinate(image)
+        
     
-    def colourSpaceCoordinate(self, image):
+    def __colourSpaceCoordinate(self, image):
 
             red_u = (20,20,256)
             red_l = (0,0,100)
@@ -99,7 +101,7 @@ class Image_processes:
                    
             return contourDic, im_copy
         
-    def mergeContors(self, ctrs):
+    def __mergeContors(self, ctrs):
             list_of_pts = []
             for c in ctrs:
                     for e in c:
