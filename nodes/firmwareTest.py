@@ -5,7 +5,6 @@ import numpy as np
 from std_msgs.msg import String
 import json
 import time
-import GPIO
 from BenchOS.firmware.MotorControllers.MotorDriver import MotorDriver
 from BenchOS.firmware.UltrasonicControllers.Ultrasonic import UltrasonicSensor
 
@@ -28,9 +27,9 @@ class BigTest():
         x = raw_data['x']
         y = raw_data['y']
         
-        if uS.distanceForward() < 10 && x > 0:
+        if uS.distanceForward() < 10 and x > 0:
             self.md.motorStop()
-        elif uS.distanceBackward() < 10 && x < 0:
+        elif uS.distanceBackward() < 10 and x < 0:
             self.md.motorStop()
         else:
             self.md.setSpeed(x)
@@ -39,7 +38,7 @@ class BigTest():
                 self.md.motorStop()
 
 if __name__ == '__main__':
-    subscribe()
+    bt = BigTest()
     try:
         rospy.spin()
     except KeyboardInterrupt:
