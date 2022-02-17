@@ -1,18 +1,7 @@
 #!/usr/bin/env python
 
-from typing import Dict
-import roslib
-import sys
-import rospy
 import cv2
 import numpy as np
-import Process
-import json
-from Process import Image_processes
-from std_msgs.msg import String
-from sensor_msgs.msg import Image
-from std_msgs.msg import Float64MultiArray, Float64, UInt8MultiArray
-from cv_bridge import CvBridge, CvBridgeError
 #----------------------------------------------------------------------------------------------------------
 
 class Image_processes:
@@ -23,10 +12,33 @@ class Image_processes:
     # Perform image processing
     def imageSegmentation(self, image):
     
-        #code here to produce 4 images from the camera feed
+        img = image
+        
+        print(img.shape) # Print image shape
+        cv2.imshow("original", img)
+        
+        #get original feed dimentions
+        height, width = img.shape[:2]
+
+        # Cropping images
+        cropped_image1 = img[0        :width/4,   0:height/4]
+        cropped_image2 = img[width/4  :width*2/4, 0:height/4]
+        cropped_image3 = img[width*2/4:width*3/4, 0:height/4]
+        cropped_image4 = img[width*3/4:width*4/4, 0:height/4]
+
+        images = [cropped_image1, cropped_image2, cropped_image3, cropped_image4]
+        
+        
+        for i in images:
+            
+            # Display cropped image
+            cv2.imshow("cropped", i)
+            cv2.waitKey(1000)
+            cv2.destroyAllWindows()
         
         roboCoords = self.distortionCorrection(images)
         return robotCoords
+    
     def distortionCorrection(self, images):
         
         #code here to correct lens distortion in 4 images from the camera feed
