@@ -11,6 +11,7 @@ class MotorDriver():
         self.naturalDirection = [1,1,1,1,1,1]
         self.targetDistance = 0
         self.heading = 0
+        self.update = False:
         self.targetHeading = 0
         self.drivingSpeed = 0
         self.currHeading = 0
@@ -24,22 +25,24 @@ class MotorDriver():
     #of each motor to enable long arcing turns or on the spot turns
     def __moveSpd(self):
         print("Driving Forward & spd:"+str(self.drivingSpeed))
-        
-        # driving the bench forward with variable turning
-        if self.drivingSpeed >= 0:
-            for i in self.motorLeft:
-                self.mc.move_motor(i, self.drivingSpeed*(self.leftAngular+1)*(-self.rightAngular+1))
-            for i in self.motorRight:
-                self.mc.move_motor(i, -self.drivingSpeed*(-self.leftAngular+1)*(self.rightAngular+1))
-            self.__encoderOut()
-        
-        #reversing controls are reveresed
-        else:
-            for i in self.motorLeft:
-                self.mc.move_motor(i, -self.drivingSpeed*(-self.leftAngular+1)*(self.rightAngular+1))
-            for i in self.motorRight:
-                self.mc.move_motor(i, self.drivingSpeed*(self.leftAngular+1)*(-self.rightAngular+1))
-            self.__encoderOut()
+
+        while self.update:
+            self.__verifyHeading()
+            # driving the bench forward with variable turning
+            if self.drivingSpeed >= 0:
+                for i in self.motorLeft:
+                    self.mc.move_motor(i, self.drivingSpeed*(self.leftAngular+1)*(-self.rightAngular+1))
+                for i in self.motorRight:
+                    self.mc.move_motor(i, -self.drivingSpeed*(-self.leftAngular+1)*(self.rightAngular+1))
+                self.__encoderOut()
+            
+            #reversing controls are reveresed
+            else:
+                for i in self.motorLeft:
+                    self.mc.move_motor(i, -self.drivingSpeed*(-self.leftAngular+1)*(self.rightAngular+1))
+                for i in self.motorRight:
+                    self.mc.move_motor(i, self.drivingSpeed*(self.leftAngular+1)*(-self.rightAngular+1))
+                self.__encoderOut()
         
 
     def __encoderOut(self):
@@ -54,6 +57,7 @@ class MotorDriver():
           
     def motorStop(self):
         print("Stopping")
+        self.update = False
         self.mc.stop_motors() 
     
     def __verifyHeading(self):
@@ -73,11 +77,11 @@ class MotorDriver():
             
             
     def move(self):
-        self.__verifyHeading()
+        self.setGo() = True
         self.__moveSpd()
+
 #-----------------------------------------------------------------------------------------------------
     # getter and setters below
-            
             
     def setDistance(self, distance):
         print("Set Distance")
