@@ -13,7 +13,7 @@ class CompassData():
     
     def getUpdate(self):
         self.c.update()
-        print "X:",self.c.x,"Y:",self.c.y,"X:",self.c.z,"Heading:",self.c.headingDegrees
+        print ("X:",self.c.x,"Y:",self.c.y,"X:",self.c.z,"Heading:",self.c.headingDegrees)
     
     def getX(self):
         self.c.update()

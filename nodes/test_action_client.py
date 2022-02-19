@@ -8,18 +8,18 @@ import actionlib
 # Brings in the messages used by the fibonacci action, including the
 # goal message and the result message.
 import parked_custom_msgs.msg
-
+from parked_custom_msgs.msg import Point
 def fibonacci_client():
     # Creates the SimpleActionClient, passing the type of the action
     # (FibonacciAction) to the constructor.
-    client = actionlib.SimpleActionClient('robotmover', parked_custom_msgs.msg.Move_ForwardAction)
+    client = actionlib.SimpleActionClient('bench1_driver', parked_custom_msgs.msg.Move_ForwardAction)
 
     # Waits until the action server has started up and started
     # listening for goals.
     client.wait_for_server()
 
     # Creates a goal to send to the action server.
-    goal = parked_custom_msgs.msg.Move_ForwardGoal(10)
+    goal = parked_custom_msgs.msg.Move_ForwardGoal(Point(10, 10))
 
     # Sends the goal to the action server.
     client.send_goal(goal, feedback_cb=feedback_cb)
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     try:
         # Initializes a rospy node so that the SimpleActionClient can
         # publish and subscribe over ROS.
-        rospy.init_node('fibonacci_client_py')
+        rospy.init_node('fibonacci_client_p1y')
         result = fibonacci_client()
         print(result)
     except rospy.ROSInterruptException:
