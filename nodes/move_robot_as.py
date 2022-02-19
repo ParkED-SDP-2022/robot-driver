@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+import imp
 import rospy
 import actionlib
 import parked_custom_msgs.msg
@@ -7,6 +8,8 @@ import time
 from parked_custom_msgs.msg import Point
 from parked_custom_msgs.msg import Robot_Sensor_State
 
+# Uncomment and use when coding on PI!
+# from BenchOS.firmware.MotorControllers.MotorDriver import MotorDriver
 class MoveRobot(object):
 
     # create messages that are used to publish feedback/result
@@ -37,10 +40,14 @@ class MoveRobot(object):
         # get and set some initial values
         goal_pos = goal.destination
         self._feedback.intervention_required = False
+
+        # call appropriate firmware functions here to set course and periodically check robot state in the loop below
+        # to adjust course!!!!!
         
         # appropriate conditions depend upon the obstacle avoidance algorithm, for example the robot is NEAR
         # the destination. (self._gps_pos is near goal_pos or self._sensor_state is clear or whatever).
         while True:
+
             # check that preempt has not been requested by the client
             if self._as.is_preempt_requested():
                 rospy.loginfo('%s: Preempted' % self._action_name)
@@ -48,11 +55,14 @@ class MoveRobot(object):
                 success = False
                 break
             self._feedback.current_positon = self._current_pos
+
             # exact execution depends upon the algorithm
             if False:
                 self._feedback.intervention_required = True
+            
             # publish the feedback
             self._as.publish_feedback(self._feedback)
+
             # this step is not necessary, the sequence is computed at 1 Hz for demonstration purposes
             r.sleep()
           
