@@ -1,6 +1,7 @@
 from motors import Motors 
 from time import time, sleep
-from CompassController.Compass import compass
+from BenchOS.firmware.CompassController.Compass import CompassData
+
 
 class MotorDriver():
     
@@ -49,7 +50,7 @@ class MotorDriver():
         
 
     def __encoderOut(self):
-    # Encoder board can be fragile - always use a try/except loop
+        # Encoder board can be fragile - always use a try/except loop
         start_time = time()
        #while time() < start_time + run_time:
         try:
@@ -108,7 +109,7 @@ class MotorDriver():
         self.__angleResolution()
         
                                    
-    def getEncoderData():
+    def getEncoderData(self):
         print("print encoder data")
         try:
             self.mc.print_encoder_data() 
