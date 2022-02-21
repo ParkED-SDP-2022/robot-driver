@@ -15,7 +15,6 @@ dT.setSpeed(50)
 dT.setHeading(0)
 dT.setTargetHeading(0)
 dT.move()
-dT.move()
 dT.motorStop()
 
 print("\n left turn all half...\n")
