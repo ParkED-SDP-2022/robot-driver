@@ -1,5 +1,6 @@
 from motors import Motors 
-from time import time, sleep 
+from time import time, sleep
+from CompassController.Compass import compass
 
 class MotorDriver():
     
@@ -11,7 +12,7 @@ class MotorDriver():
         self.naturalDirection = [1,1,1,1,1,1]
         self.targetDistance = 0
         self.heading = 0
-        self.update = False:
+        self.update = False
         self.targetHeading = 0
         self.drivingSpeed = 0
         self.currHeading = 0
@@ -19,6 +20,7 @@ class MotorDriver():
         self.turningAngle = 0
         self.leftAngular = 0
         self.rightAngular = 0
+        self.compass = CompassData()
     
     #private method will drive the robot at a speed set by the interface
     #the angular will be set by the offset in heading and affect the speed
@@ -27,6 +29,7 @@ class MotorDriver():
         print("Driving Forward & spd:"+str(self.drivingSpeed))
 
         while self.update:
+            self.__setHeading(self.compass.getHeading())
             self.__verifyHeading()
             # driving the bench forward with variable turning
             if self.drivingSpeed >= 0:
@@ -77,7 +80,7 @@ class MotorDriver():
             
             
     def move(self):
-        self.setGo() = True
+        self.setGo = True
         self.__moveSpd()
 
 #-----------------------------------------------------------------------------------------------------
@@ -91,7 +94,7 @@ class MotorDriver():
         print("Set speed")
         self.drivingSpeed = speed
                                    
-    def setHeading(self, heading):
+    def __setHeading(self, heading):
         print("Set heading")
         self.heading = heading
                                    
