@@ -11,7 +11,7 @@ class MotorDriver():
         self.naturalDirection = [1,1,1,1,1,1]
         self.targetDistance = 0
         self.heading = 0
-        self.update = False:
+        self.update = False
         self.targetHeading = 0
         self.drivingSpeed = 0
         self.currHeading = 0
