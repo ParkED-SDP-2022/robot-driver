@@ -1,5 +1,7 @@
 from motors import Motors 
-from time import time, sleep 
+from time import time, sleep
+from BenchOS.firmware.CompassController.Compass import CompassData
+
 
 class MotorDriver():
     
@@ -10,6 +12,7 @@ class MotorDriver():
         self.motorRight = 1
         self.targetDistance = 0
         self.heading = 0
+        self.update = False
         self.targetHeading = 0
         self.drivingSpeed = 0
         self.currHeading = 0
@@ -17,12 +20,14 @@ class MotorDriver():
         self.turningAngle = 0
         self.leftAngular = 0
         self.rightAngular = 0
+        self.compass = CompassData()
     
     #private method will drive the robot at a speed set by the interface
     #the angular will be set by the offset in heading and affect the speed
     #of each motor to enable long arcing turns or on the spot turns
     def __moveSpd(self):
         print("Driving Forward & spd:"+str(self.drivingSpeed))
+<<<<<<< HEAD:BenchOS/firmware/MotorControllers/MotorDriver-old.py
         
         # driving the bench forward with variable turning
         if self.drivingSpeed >= 0:
@@ -35,10 +40,31 @@ class MotorDriver():
                 self.mc.move_motor(i, -self.drivingSpeed*(-self.leftAngular+1)*(self.rightAngular+1))
                 self.mc.move_motor(i, -self.drivingSpeed*(self.leftAngular+1)*(-self.rightAngular+1))
             self.__encoderOut()
+=======
+
+        while self.update:
+            self.__setHeading(self.compass.getHeading())
+            self.__verifyHeading()
+            # driving the bench forward with variable turning
+            if self.drivingSpeed >= 0:
+                for i in self.motorLeft:
+                    self.mc.move_motor(i, self.drivingSpeed*(self.leftAngular+1)*(-self.rightAngular+1))
+                for i in self.motorRight:
+                    self.mc.move_motor(i, -self.drivingSpeed*(-self.leftAngular+1)*(self.rightAngular+1))
+                self.__encoderOut()
+            
+            #reversing controls are reveresed
+            else:
+                for i in self.motorLeft:
+                    self.mc.move_motor(i, -self.drivingSpeed*(-self.leftAngular+1)*(self.rightAngular+1))
+                for i in self.motorRight:
+                    self.mc.move_motor(i, self.drivingSpeed*(self.leftAngular+1)*(-self.rightAngular+1))
+                self.__encoderOut()
+>>>>>>> b242a41ff2b6cb840268fb95b6c19d35d8131c55:BenchOS/firmware/MotorControllers/MotorDriver.py
         
 
     def __encoderOut(self):
-    # Encoder board can be fragile - always use a try/except loop
+        # Encoder board can be fragile - always use a try/except loop
         start_time = time()
        #while time() < start_time + run_time:
         try:
@@ -49,6 +75,7 @@ class MotorDriver():
           
     def motorStop(self):
         print("Stopping")
+        self.update = False
         self.mc.stop_motors() 
     
     def __verifyHeading(self):
@@ -68,11 +95,11 @@ class MotorDriver():
             
             
     def move(self):
-        self.__verifyHeading()
+        self.setGo = True
         self.__moveSpd()
+
 #-----------------------------------------------------------------------------------------------------
     # getter and setters below
-            
             
     def setDistance(self, distance):
         print("Set Distance")
@@ -82,7 +109,7 @@ class MotorDriver():
         print("Set speed")
         self.drivingSpeed = speed
                                    
-    def setHeading(self, heading):
+    def __setHeading(self, heading):
         print("Set heading")
         self.heading = heading
                                    
@@ -96,7 +123,7 @@ class MotorDriver():
         self.__angleResolution()
         
                                    
-    def getEncoderData():
+    def getEncoderData(self):
         print("print encoder data")
         try:
             self.mc.print_encoder_data() 
