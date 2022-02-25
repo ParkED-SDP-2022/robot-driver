@@ -6,9 +6,8 @@ class MotorDriver():
     def __init__(self):
         print("Initialising Motor Controller")
         self.mc = Motors() 
-        self.motorLeft = [0, 2, 5]
-        self.motorRight = [1, 4, 2]
-        self.naturalDirection = [1,1,1,1,1,1]
+        self.motorLeft = 0
+        self.motorRight = 1
         self.targetDistance = 0
         self.heading = 0
         self.targetHeading = 0
@@ -27,18 +26,14 @@ class MotorDriver():
         
         # driving the bench forward with variable turning
         if self.drivingSpeed >= 0:
-            for i in self.motorLeft:
-                self.mc.move_motor(i, self.drivingSpeed*(self.leftAngular+1)*(-self.rightAngular+1))
-            for i in self.motorRight:
-                self.mc.move_motor(i, -self.drivingSpeed*(-self.leftAngular+1)*(self.rightAngular+1))
+                self.mc.move_motor(0, self.drivingSpeed*(self.leftAngular+1)*(-self.rightAngular+1))
+                self.mc.move_motor(1, self.drivingSpeed*(-self.leftAngular+1)*(self.rightAngular+1))
             self.__encoderOut()
         
         #reversing controls are reveresed
         else:
-            for i in self.motorLeft:
                 self.mc.move_motor(i, -self.drivingSpeed*(-self.leftAngular+1)*(self.rightAngular+1))
-            for i in self.motorRight:
-                self.mc.move_motor(i, self.drivingSpeed*(self.leftAngular+1)*(-self.rightAngular+1))
+                self.mc.move_motor(i, -self.drivingSpeed*(self.leftAngular+1)*(-self.rightAngular+1))
             self.__encoderOut()
         
 
