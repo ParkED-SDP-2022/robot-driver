@@ -15,7 +15,7 @@ class Motors(object):
         self.bus = SMBus(1)
         sleep(0.2)
         print "SMBus Started."
-        self.tRexSlaveAddress = 0x07
+        self.tRexSlave = 0x07
         self.num_encoder_ports = 24 #d5 & d6 for motors
         
         #command packet values
@@ -73,37 +73,12 @@ class Motors(object):
         self.impZH = 0x00
         self.impZL = 0x00
         
-        self.statusPacket = [
-            self.sB,
-            self.errFlag,
-            self.batteryVH,
-            self.batteryVL,
-            self.leftMotorCH,
-            self.leftMotorCL,
-            self.leftEncoderCountH,
-            self.leftEncoderCountL,
-            self.rightMotorCH,
-            self.rightMotorCL,
-            self.rightEncoderCountH,
-            self.rightEncoderCountL,
-            self.accXH,
-            self.accXL,
-            self.accYH,
-            self.accYL,
-            self.accZH,
-            self.accZL,
-            self.impXH,
-            self.impXL,
-            self.impYH,
-            self.impYL,
-            self.impZH,
-            self.impZL
-        ]
-        
-        print("Setting initial State...")
-        self.write_block()
-        sleep(2)
-        print("Set")
+        self.statusPacket = []
+           
+        # print("Setting initial State...")
+        # self.write_block()
+        # sleep(2)
+        # print("Set")
         #self.setMotors(0)
         #self.write_block()
         
@@ -111,9 +86,56 @@ class Motors(object):
         low = value & 0xff
         high = (value >> 8) & 0xff
         return hex(high), hex(low)
+        
+    def byteHex(self, value1, value2):
+        a = value1 
+        b = a << 8 | value2
+        return b
 
     def write_block(self):
+    
+        try:
+            cmd = self.updateCMD()
+            print("Writing Data Block")
+            # j=0
+            # for i in commandPacket:
+                # print("writing "+ str(i) + " to reg " + str(j))
+                # self.bus.write_byte(self.tRexSlaveAddress, j, i)
+                # j+=1
+            
+            self.bus.write_i2c_block_data(self.tRexSlave, 0x01, cmd)
+            sleep(0.2)
+        except IOError as e:
+            print('I/O error({0}): {1}'.format(e.errno, e.strerror))
+
+    #toDo: assign each staus packet a value and provide fuctions for data out of each
+    def __i2c_status_packet(self):
         
+        for i in range(0,self.num_encoder_ports,1):
+            print("reading "+ str(i) + " to reg " + str(j))
+            try:
+                self.statusPacket[i] = self.bus.read_byte(self.tRexSlave, j, i)
+            except IOError as e:
+                print('I/O error({0}): {1}'.format(e.errno, e.strerror))
+            j+=1
+        
+    def read_packet(self,id):
+        return self.statusPacket[id]
+     
+    def update_status(self):
+        self.__i2c_status_packet()
+        sleep(0.2)
+
+    def print_packet(self):
+        try:
+            packet = self.bus.i2c_block_data(self.tRexSlave, 0x00, self.num_encoder_ports)
+        except IOError as e:
+            print('I/O error({0}): {1}'.format(e.errno, e.strerror))
+        ts = str(datetime.now())
+        sleep(0.2)
+        print packet, ts.rjust(24,'.')
+        
+    def updateCMD(self):
         commandPacket = [
             self.sb,
             self.pwm,
@@ -143,46 +165,7 @@ class Motors(object):
             self.i2C,
             self.clk
         ]
-    
-        try:
-            print("Writing Data Block")
-            j=0
-            for i in commandPacket:
-                print("writing "+ str(i) + " to reg " + str(j))
-                self.bus.write_byte(self.tRexSlaveAddress, j, i)
-                j+=1
-            
-            #self.bus.write_i2c_block_data(self.tRexSlaveAddress, 0x01, commandPacket)
-            sleep(0.2)
-        except IOError as e:
-            print('I/O error({0}): {1}'.format(e.errno, e.strerror))
-
-    #toDo: assign each staus packet a value and provide fuctions for data out of each
-    def __i2c_status_packet(self):
-        
-        for i in range(0,self.num_encoder_ports,1):
-            print("reading "+ str(i) + " to reg " + str(j))
-            try:
-                self.statusPacket[i] = self.bus.read_byte(self.tRexSlaveAddress, j, i)
-            except IOError as e:
-                print('I/O error({0}): {1}'.format(e.errno, e.strerror))
-            j+=1
-        
-    def read_packet(self,id):
-        return self.statusPacket[id]
-     
-    def update_status(self):
-        self.__i2c_status_packet()
-        sleep(0.2)
-
-    def print_packet(self):
-        try:
-            packet = self.bus.i2c_block_data(self.tRexSlaveAdress, 0x00, self.num_encoder_ports)
-        except IOError as e:
-            print('I/O error({0}): {1}'.format(e.errno, e.strerror))
-        ts = str(datetime.now())
-        sleep(0.2)
-        print packet, ts.rjust(24,'.')
+        return commandPacket
 
     def setTRexSlave(self, value):
             self.tRexSlaveAddress = value
@@ -202,55 +185,33 @@ class Motors(object):
         self.setRightMotor(value)
         self.setLeftMotor(value)
     
-#    def getsB(self):
-#        return self.statusPacket[0]
-#     def geterrFlag(self):
-#         return self.statusPacket[]
-#     def getbatteryVH(self):
-#         return self.statusPacket[]
-#     def getbatteryVL(self):
-#         return self.statusPacket[]
-#     def getleftMotorCH(self):
-#         return self.statusPacket[]
-#     def getleftMotorCL(self):
-#         return self.statusPacket[]
-#     def getleftEncoderCountH(self):
-#         return self.statusPacket[]
-#     def getleftEncoderCountL(self):
-#         return self.statusPacket[]
-#     def getrightMotorCH(self):
-#         return self.statusPacket[]
-#     def getrightMotorCL(self):
-#         return self.statusPacket[]
-#     def getrightEncoderCountH(self):
-#         return self.statusPacket[]
-#     def getrightEncoderCountL(self):
-#         return self.statusPacket[]
-#     def getaccXH(self):
-#         return self.statusPacket[]
-#     def getaccXL(self):
-#         return self.statusPacket[]
-#     def getaccYH(self):
-#         return self.statusPacket[]
-#     def getaccYL(self):
-#         return self.statusPacket[]
-#     def getaccZH(self):
-#         return self.statusPacket[]
-#     def getaccZL(self):
-#         return self.statusPacket[]
-#     def getimpXH(self):
-#         return self.statusPacket[]
-#     def getimpXL(self):
-#         return self.statusPacket[]
-#     def getimpYH(self):
-#         return self.statusPacket[]
-#     def getimpYL(self):
-#         return self.statusPacket[]
-#     def getimpZH(self):
-#         return self.statusPacket[]
-#     def getimpZL(self):
-#         return self.statusPacket[]
-#         
+   def getsB(self):
+       return self.statusPacket[0]
+    def geterrFlag(self):
+        return self.statusPacket[1]
+    def getbatteryV(self):
+        return self.byteHex(self.statusPacket[2], self.statusPacket[3])
+    def getleftMotorC(self):
+        return self.byteHex(self.statusPacket[4], self.statusPacket[5])
+    def getleftEncoderCount(self):
+        return self.byteHex(self.statusPacket[6], self.statusPacket[7])
+    def getrightMotorC(self):
+        return self.byteHex(self.statusPacket[8], self.statusPacket[9])
+    def getrightEncoderCount(self):
+        return self.byteHex(self.statusPacket[10], self.statusPacket[11])
+    def getaccX(self):
+        return self.byteHex(self.statusPacket[12], self.statusPacket[13])
+    def getaccY(self):
+        return self.byteHex(self.statusPacket[14], self.statusPacket[15])
+    def getaccZ(self):
+        return self.byteHex(self.statusPacket[16], self.statusPacket[17])
+    def getimpX(self):
+        return self.byteHex(self.statusPacket[18], self.statusPacket[19])
+    def getimpY(self):
+        return self.byteHex(self.statusPacket[20], self.statusPacket[21])
+    def getimpZ(self):
+        return self.byteHex(self.statusPacket[22], self.statusPacket[23])
+        
         
 
 
