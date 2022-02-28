@@ -12,6 +12,7 @@
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "@types/hapi__joi": "^17.1.8",
+    "bcryptjs": "^2.4.3",
     "express": "^4.17.3",
     "http-proxy-middleware": "^2.0.3",
     "mysql": "^2.18.1"
