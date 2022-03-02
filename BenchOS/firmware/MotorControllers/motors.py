@@ -23,31 +23,33 @@ class Motors(object):
         #command packet values
         self.sb = 0x0f #start Byte
         self.pwm = 0x06 #motor pwm frequency 0-7
-        self.lmH = 0x00 #left motor speed word || -255 to max 255
-        self.lmL = 0x00 #left motor speed word || -255 to max 255
+        self.lmH = 0x00 #left motor speed Byte || -255 to max 255
+        self.lmL = 0x00 #left motor speed Byte || -255 to max 255
         self.lmB = 0x00 #left motor break || 0 or 1
-        self.rmH = 0x00 #right motor speed word || max 255
-        self.rmL = 0x00 #right motor speed word || max 255
+        self.rmH = 0x00 #right motor speed Byte || max 255
+        self.rmL = 0x00 #right motor speed Byte || max 255
         self.rmB = 0x00 #right motor break || 0 or 1
-        self.servo0H = 0x00 #servo 0 word
-        self.servo0L = 0x00 #servo 0 word
-        self.servo1H = 0x00 #servo 1 word
-        self.servo1L = 0x00 #servo 1 word
-        self.servo2H = 0x00 #servo 2 word
-        self.servo2L = 0x00 #servo 2 word
-        self.servo3H = 0x00 #servo 3 word
-        self.servo3L = 0x00 #servo 3 word
-        self.servo4H = 0x00 #servo 4 word || must be set to 0 to disable servo pulses
-        self.servo4L = 0x00 #servo 4 word || must be set to 0 to disable servo pulses
-        self.servo5H = 0x00 #servo 5 word || must be set to 0 to disable servo pulses
-        self.servo5L = 0x00 #servo 5 word || must be set to 0 to disable servo pulses
+        self.servo0H = 0x00 #servo 0 Byte
+        self.servo0L = 0x00 #servo 0 Byte
+        self.servo1H = 0x00 #servo 1 Byte
+        self.servo1L = 0x00 #servo 1 Byte
+        self.servo2H = 0x00 #servo 2 Byte
+        self.servo2L = 0x00 #servo 2 Byte
+        self.servo3H = 0x00 #servo 3 Byte
+        self.servo3L = 0x00 #servo 3 Byte
+        self.servo4H = 0x00 #servo 4 Byte || must be set to 0 to disable servo pulses
+        self.servo4L = 0x00 #servo 4 Byte || must be set to 0 to disable servo pulses
+        self.servo5H = 0x00 #servo 5 Byte || must be set to 0 to disable servo pulses
+        self.servo5L = 0x00 #servo 5 Byte || must be set to 0 to disable servo pulses
         self.adV = 0x32 # 0-255 default 50
-        self.impSH = 0x00 #impact sensitivy word
-        self.impSL = 0x00 #impact sensitivy word
+        self.impSH = 0x00 #impact sensitivy Byte
+        self.impSL = 0x00 #impact sensitivy Byte
         self.lowBH = 0x02 #low battery word || must be between 550 - 3000
         self.lowBL = 0x32 #low battery word || must be between 550 - 3000
         self.i2C = 0x07 #range 0 - 127 default 0x07
-        self.clk = 0x01 # 0 = 100khz 1=400khz
+        self.clk = 0x00 # 0 = 100khz 1=400khz
+        
+        self.clockrateincrement = 1/((self.clk/2)/10)
 
         self.statusPacket = []
 
@@ -80,6 +82,7 @@ class Motors(object):
                         self.servo3L,self.servo4H,self.servo4L,self.servo5H,
                         self.servo5L,self.adV,self.impSH,self.impSL,self.lowBH,
                         self.lowBL,self.i2C,self.clk]
+        self.clockrateincrement = 1/((self.clk/2)/10)
                         
         print("packet updated")
         return commandPacket
@@ -116,6 +119,9 @@ class Motors(object):
         self.setLeftMotor(value)
         print("set Motors")
         self.i2cWrite()
+        
+    def stopMotors(self):
+        self.setMotors()
 
     def hexByte(self, value):
         low = value & 0xff
@@ -127,6 +133,10 @@ class Motors(object):
         b = a << 8 | value2
         return b
 
+    #--------------------------------------------------------------------------------------------
+    
+    #getter functions to retrieve individual packet info
+    
     def getsB(self):
         return self.statusPacket[0]
 
@@ -166,20 +176,31 @@ class Motors(object):
     def getimpZ(self):
         return self.byteHex(self.statusPacket[22], self.statusPacket[23])
 
+
+    #--------------------------------------------------------------------------------------------
+    
+    #interupts to pause the cycle
     def pause(self):
         self.sysPause = True
     def resume(self):
         self.sysPause = False
 
-    # def main(self):
-        # while True:
-            # if self.sysPause == False:
-                # self.i2cWrite()
-                # sleep(0.1)
-                # self.i2cRead()
-            # else:
-                # sleep(0.1)
 
-
+    #-------------------------------------------------------------------------------------------- 
+    #main cycle
+    def main(self):
+        while True:
+            
+            if self.sysPause == False:
+                self.i2cWrite()
+                sleep_ms(self.clockrateIncrement)
+                
+                sendStamp = datetime.now()
+                self.i2cRead()
+                recieveStamp = datetime.now()
+                
+                sleep_ms(clockrateincrement - recieveStamp - sendStamp)
+            else:
+                sleep(0.1)
 
 
