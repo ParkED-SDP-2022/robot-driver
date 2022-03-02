@@ -97,6 +97,9 @@ class Motors(object):
         self.sb = value
         print("new sb = "+ str(value))
 
+
+    #--------------------------------------------------------------------------------------------
+    #motor controll functions
     def setLeftMotor(self, value):
         if value>255:
             value=255
@@ -121,7 +124,14 @@ class Motors(object):
         self.i2cWrite()
         
     def stopMotors(self):
-        self.setMotors()
+        self.lmB = 1
+        self.rmB = 1
+        self.setMotors(0)
+        self.lmB = 0
+        self.rmB = 0
+        
+    #--------------------------------------------------------------------------------------------
+    #hex value calculations to provide 
 
     def hexByte(self, value):
         low = value & 0xff
@@ -188,19 +198,19 @@ class Motors(object):
 
     #-------------------------------------------------------------------------------------------- 
     #main cycle
-    def main(self):
-        while True:
+    # def main(self):
+        # while True:
             
-            if self.sysPause == False:
-                self.i2cWrite()
-                sleep_ms(self.clockrateIncrement)
+            # if self.sysPause == False:
+                # self.i2cWrite()
+                # sleep_ms(self.clockrateIncrement)
                 
-                sendStamp = datetime.now()
-                self.i2cRead()
-                recieveStamp = datetime.now()
+                # sendStamp = datetime.now()
+                # self.i2cRead()
+                # recieveStamp = datetime.now()
                 
-                sleep_ms(clockrateincrement - recieveStamp - sendStamp)
-            else:
-                sleep(0.1)
+                # sleep_ms(clockrateincrement - recieveStamp - sendStamp)
+            # else:
+                # sleep(0.1)
 
 

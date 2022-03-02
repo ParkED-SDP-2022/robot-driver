@@ -7,14 +7,14 @@ from std_msgs.msg import String
 import json
 import time
 from BenchOS.firmware.CompassController.Compass import CompassData
-from BenchOS.firmware.MotorControllers.MotorDriver import MotorDriver
+from BenchOS.firmware.MotorControllers.MotorDriver import motors
 from BenchOS.firmware.UltrasonicControllers.Ultrasonic import UltrasonicSensor
 
 class BigTest():
     def __init__(self):
         
         self.uS = UltrasonicSensor()
-        self.md = MotorDriver()
+        self.md = Motors()
         self.cD = CompassData()
         self.x = 0
         self.y = 0
@@ -42,14 +42,20 @@ class BigTest():
         
         self.x = raw_data['x']
         self.y = raw_data['y']
+        self.md.setMotors(self.x)
         
-        self.md.setSpeed(self.x)
-        self.md.setTurningAngle(self.y)
+        if y>0:
+                self.md.setLeftMotor(self.x + self.y)
+                self.md.setRightMotor(self.x - self.y)
+        else:
+                self.md.setLeftMotor(self.x - self.y)
+                self.md.setRightMotor(self.x + self.y)
+        
+        
         if self.x is 0 and self.y is 0:
-            self.md.motorStop()
+            self.md.stopMotors()
         
         self.cD.getUpdate()
-
 if __name__ == '__main__':
     bt = BigTest()
     try:
