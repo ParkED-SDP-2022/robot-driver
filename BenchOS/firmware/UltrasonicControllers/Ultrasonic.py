@@ -7,6 +7,7 @@ class UltrasonicSensor():
     def __init__(self):
         #GPIO Mode (BOARD / BCM)
         GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
          
         #set GPIO Pins
         self.GPIO_TRIGGER_B = 17
@@ -50,7 +51,7 @@ class UltrasonicSensor():
         # multiply with the sonic speed (34300 cm/s)
         # and divide by 2, because there and back
         distance = (TimeElapsed * 34300) / 2
-     
+        sleep(0.1)
         return distance
     
     #retriteve the backward US distance
@@ -79,7 +80,7 @@ class UltrasonicSensor():
         # multiply with the sonic speed (34300 cm/s)
         # and divide by 2, because there and back
         distance = (TimeElapsed * 34300) / 2
-        
+        sleep(0.1)
         return distance
     
     def cleanup(self):

@@ -27,6 +27,6 @@ class CompassData():
         self.c.update()
         return self.c.z
     
-    def getHeadng(self):
+    def getHeading(self):
         self.c.update()
         return self.c.headingDegrees
