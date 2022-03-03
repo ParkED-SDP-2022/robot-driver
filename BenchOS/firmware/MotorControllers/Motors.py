@@ -15,7 +15,7 @@ class Motors(object):
         self.arduino = None
         while self.arduino == None:
             try:
-                self.arduino = serial.Serial(port='/dev/ttyACM'+str(i), baudrate=9600, timeout=.1)
+                self.arduino = serial.Serial(port='/dev/ttyACM'+str(i), baudrate=9600, timeout=0.1)
                 print(i)
                 print(self.arduino)
             except:
