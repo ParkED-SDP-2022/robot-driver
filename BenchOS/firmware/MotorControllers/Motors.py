@@ -153,7 +153,9 @@ class Motors(object):
         self.arduino.reset_input_buffer()
         self.arduino.reset_output_buffer()
         self.arduino.write(bytearray(cmd, "utf-8"))
-        input_from_serial = map(int, (self.arduino.readline().split(',')))
+#         input_from_serial = map(int, (self.arduino.readline().split(',')))
+        input_from_serial = self.arduino.readline()
+        print(input_from_serial)
 
         time.sleep(0.1)
         return input_from_serial

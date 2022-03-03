@@ -4,7 +4,7 @@ import json
 import random
 import rospy
 import sys
-from std_msgs.msg import Twist
+from geometry_msgs.msg import Twist
 
 class Manual_testing:
 

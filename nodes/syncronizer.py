@@ -33,10 +33,12 @@ class Syncronizer():
         self.cD = CompassData()
         self.x = 0
         self.y = 0
+        
+        self.sync()
 
     # Continuously reads and writes data to and from the robot.
     def sync(self):
-        rate = rospy.Rate(400)
+        rate = rospy.Rate(4)
         while not rospy.is_shutdown():
             self.input_from_serial = self.md.write_read()
             # create the data packet for publishing as Robot_Sensor_State.
@@ -48,6 +50,7 @@ class Syncronizer():
         self.parse(data)
     
     def parse(self, raw_data):
+        print(raw_data)
         
         self.x = raw_data.linear.x
         self.y = raw_data.angular.y
