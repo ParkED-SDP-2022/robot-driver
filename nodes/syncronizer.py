@@ -8,7 +8,6 @@ from std_msgs.msg import String
 import json
 import time
 
-from parked_custom_msgs.msg import Robot_Sensor_State, Ultrasonic_Sensor, Compass
 from geometry_msgs.msg import Twist
 
 # OS libraries
@@ -23,7 +22,6 @@ class Syncronizer():
         
         rospy.init_node('bench_x_yncronizer', anonymous = True)
         self.subscriber_name = rospy.Subscriber("/cmd_vel", Twist, self.callback)
-        self.publisher_name = rospy.Publisher('/bench_sensor_state', Robot_Sensor_State, queue_size=1)
         
         self.input_from_serial = []
 
@@ -41,10 +39,6 @@ class Syncronizer():
         rate = rospy.Rate(4)
         while not rospy.is_shutdown():
             self.input_from_serial = self.md.write_read()
-#             # create the data packet for publishing as Robot_Sensor_State.
-#             sensor_state = Robot_Sensor_State(Compass(self.cD.getHeading()), Ultrasonic_Sensor(self.uS.distanceForward()),
-#                                               Ultrasonic_Sensor(self.uS.distanceBackward()))
-#             self.publisher_name.publish(sensor_state)
             rate.sleep()
 
 
@@ -59,7 +53,8 @@ class Syncronizer():
         print(str(self.x) + "|" + str(self.y))
         
         self.md.setMotors(self.x, self.y)
-        
+# Local planner will take care of this
+
 #         if self.x is 0 and self.y is 0:
 #             self.md.stopMotors()
 #             

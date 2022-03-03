@@ -1,53 +1,48 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 
-# some random stackoverflow stuff to make it possible to import packages.
-import sys
-import os
-myDir = os.getcwd()
-sys.path.append(myDir)
-from pathlib import Path
-path = Path(myDir)
-a=str(path.parent.absolute())
-sys.path.append(a)
-
+import imp
 import rospy
-from parked_custom_msgs.msg import Robot_Sensor_State
+import subprocess
+import numpy as np
+import json
+import time
 
-# firmware files uncomment when testing on PI!!!!
-# from BenchOS.firmware.CompassController import Compass
-# from BenchOS.firmware.UltrasonicControllers import Ultrasonic
+from parked_custom_msgs.msg import Robot_Sensor_State, Ultrasonic_Sensor, Compass
+from geometry_msgs.msg import Twist
 
-class Sensor_State_Pub:
+# OS libraries
+from BenchOS.firmware.CompassController.Compass import CompassData
+from BenchOS.firmware.UltrasonicControllers.Ultrasonic import UltrasonicSensor
 
+class Sensor_State_Pub():
     def __init__(self):
-        rospy.init_node('sensor_state_pub', anonymous=False)
-        self.sensor_state_pub = rospy.Publisher('sensor_state', Robot_Sensor_State, queue_size=10)
-        self.sensor_state_data = Robot_Sensor_State()
-        # uncomment when testing on PI!!!!
-        # self.compass_controller = Compass.CompassData()
-        # self.ultrasonic_controller = Ultrasonic.UltrasonicSensor()
-        rate = rospy.Rate(10)
+        
+#        cmd_vel_test = subprocess.Popen(["rosrun","robot-driver", "cmd_vel_test.py"])
+        
+        rospy.init_node('bench_x_sensor_state_pub', anonymous = True)
+        self.publisher_name = rospy.Publisher('/bench_sensor_state', Robot_Sensor_State, queue_size=3)
+        
 
+        self.uS = UltrasonicSensor()
+        time.sleep(3)
+        self.cD = CompassData()
+        
+        self.sync()
+
+    # Continuously reads and writes data to and from the robot.
+    def sync(self):
+        rate = rospy.Rate(40)
         while not rospy.is_shutdown():
-
-            # call appropriate methods from imported firmware files, populate sensor_state_data!!!!!
-            # after this the node will be fully operational
-
-            self.sensor_state_pub.publish(self.sensor_state_data)
-
+            # create the data packet for publishing as Robot_Sensor_State.
+            sensor_state = Robot_Sensor_State(Compass(self.cD.getHeading()), Ultrasonic_Sensor(self.uS.distanceForward()),
+                                              Ultrasonic_Sensor(self.uS.distanceBackward()))
+            self.publisher_name.publish(sensor_state)
             rate.sleep()
-    
-
-
-def main(args):
-    pub = Sensor_State_Pub()
-    try: 
-            rospy.spin()
-
-    except KeyboardInterrupt:
-        print("Shutting down")
-
-
-# run the code if the node is called
+        
 if __name__ == '__main__':
-    main(sys.argv)
+    bt = Sensor_State_Pub()
+    try:
+        rospy.spin()
+    except KeyboardInterrupt:
+        print("Shutting Down")
+        GPIO.cleanup()    
