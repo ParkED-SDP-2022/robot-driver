@@ -1,15 +1,27 @@
-import BenchOS.firmware.MotorControllers.motors
-from motors import *
+#!/usr/bin/env python3
+
+import BenchOS.firmware.MotorControllers.Motors
+from Motors import *
 
 m = Motors()
 
-print("Getting initial State...")
-print("\n")
-m.setsB(0x0f)
-m.setTRexSlave(0x07)
-m.i2cRead()
-m.print_packet()
-sleep(0.2)
+m.setMotors(100, 0)
+sleep(1)
+m.setMotors(150, 0)
+sleep(1)
+m.setMotors(50, 0)
+sleep(1)
+m.setMotors(-100, 0)
+sleep(4)
+
+m.stopMotors()
+sleep(1)
+print("finish")
+
+# print("Getting initial State...")
+# print("\n")
+# sleep(0.2)
+# m.stopMotors()
         
 # print("testing Hex of 400")
 # u,l = m.hexByte(400)
@@ -24,13 +36,11 @@ sleep(0.2)
 
 #m.write_block()
 
-for i in range(0,200,1):
-    print("reading")
-    m.setMotors(100 - i)
-    m.i2cRead()
-    m.print_packet()
+# for i in range(0,200,1):
+    # print("reading")
+    # m.setMotors(100 - i, 0)
 
-m.setMotors(0)
+# m.setMotors(0,0)
 
 # print("start Byte")
     # print(m.getsB())

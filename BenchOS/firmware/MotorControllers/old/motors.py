@@ -1,9 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import os
 import time
 import numpy as np
 from smbus2 import SMBus, i2c_msg
+import serial
 from time import sleep
 from datetime import datetime
 
@@ -17,7 +18,10 @@ class Motors(object):
         print("SMBus Started.")
         self.tRexSlave = 0x07
         self.num_reg = 24 #d5 & d6 for motors
-
+        try:
+            self.arduino = serial.Serial(port='/dev/ttyACM0', baudrate=9600, timeout=.1)
+        except:
+            self.arduino = serial.Serial(port='/dev/ttyACM1', baudrate=9600, timeout=.1)
         self.sysPause = False
 
         #command packet values
@@ -47,28 +51,29 @@ class Motors(object):
         self.lowBH = 0x02 #low battery word || must be between 550 - 3000
         self.lowBL = 0x32 #low battery word || must be between 550 - 3000
         self.i2C = 0x07 #range 0 - 127 default 0x07
-        self.clk = 0x00 # 0 = 100khz 1=400khz
+        self.clk = 0x01 # 0 = 100khz 1=400khz
         
-        self.clockrateincrement = 1/((self.clk/2)/10)
+        self.clockrateincrement = 1/20000
 
         self.statusPacket = []
 
-    def i2cRead(self):
+    def __i2cRead(self):
         try:
             read = self.msg.read(self.tRexSlave, self.num_reg)
             self.bus.i2c_rdwr(read)
-            sleep(0.2)
+        self.sta
+            sleep(self.clockrateincrement*2)
             self.statusPacket = list(read)
         except IOError as e:
             print('I/O error({0}): {1}'.format(e.errno, e.strerror))
 
-    def i2cWrite(self):
+    def __i2cWrite(self):
         cmd = self.updateCMD()
         try:
             self.bus.write_i2c_block_data(self.tRexSlave, 0x0f, cmd)
         except IOError as e:
             print('I/O error({0}): {1}'.format(e.errno, e.strerror))
-        sleep(0.2)
+        sleep( self.clockrateincrement)
 
 
     def print_packet(self):
@@ -82,7 +87,10 @@ class Motors(object):
                         self.servo3L,self.servo4H,self.servo4L,self.servo5H,
                         self.servo5L,self.adV,self.impSH,self.impSL,self.lowBH,
                         self.lowBL,self.i2C,self.clk]
-        self.clockrateincrement = 1/((self.clk/2)/10)
+        if self.clk == 0:
+            self.clockrateincrement = 1/5000
+        else:
+            self.clockrateincrement = 1/20000
                         
         print("packet updated")
         return commandPacket
@@ -99,36 +107,41 @@ class Motors(object):
 
 
     #--------------------------------------------------------------------------------------------
-    #motor controll functions
-    def setLeftMotor(self, value):
-        if value>255:
-            value=255
-        elif value<-255:
-            value=-255
+    #motor control functions
+    def __setLeftMotor(self, value):
         high,low = self.hexByte(value)
         self.lmH = high
         self.lmL = low
-    def setRightMotor(self, value):
-        if value>255:
-            value=255
-        elif value<-255:
-            value=-255
+    def __setRightMotor(self, value):
         high,low = self.hexByte(value)
         self.rmH = high
         self.rmL = low
 
-    def setMotors(self, value):
-        self.setRightMotor(value)
-        self.setLeftMotor(value)
-        print("set Motors")
-        self.i2cWrite()
+    def setMotors(self, speed, angularVel):
+        if speed>255:
+            speed=255
+        elif speed<-255:
+            speed=-255
+        if angularVel<0:
+            self.__setRightMotor(speed +angularVel)
+            self.__setLeftMotor(speed -angularVel)
+        if angularVel>=0:
+            self.__setRightMotor(speed -angularVel)
+            self.__setLeftMotor(speed +angularVel)
+        self.__i2cWrite()
+        sleep(self.clockrateincrement)
+        self.__i2cRead()
+        sleep(self.clockrateincrement)
         
     def stopMotors(self):
         self.lmB = 1
         self.rmB = 1
-        self.setMotors(0)
+        self.setMotors(0,0)
+        sleep(self.clockrateincrement)
         self.lmB = 0
         self.rmB = 0
+        self.__i2cRead()
+        sleep(self.clockrateincrement)
         
     #--------------------------------------------------------------------------------------------
     #hex value calculations to provide 
@@ -195,7 +208,12 @@ class Motors(object):
     def resume(self):
         self.sysPause = False
 
-
+    def write_read(self):
+        cmd = self.updateCMD()
+        self.arduino.write(cmd)
+        time.sleep(0.05)
+        print(self.arduino.readline())
+        
     #-------------------------------------------------------------------------------------------- 
     #main cycle
     # def main(self):

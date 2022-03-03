@@ -6,7 +6,6 @@ import rospy
 import sys
 from std_msgs.msg import String
 
-
 class Manual_testing:
 
     # Defines publisher and subscriber
@@ -19,14 +18,15 @@ class Manual_testing:
         print("     w     ")
         print("a    s    d")
         print("     x     ")
-        print("s to stop")
-        rate = rospy.Rate(500)  # 50hz
+        print("s to stop\n")
+        rate = rospy.Rate(50)  # 5hz
         self.x = 0
         self.y = 0
         # record the beginning time
         stime = rospy.get_time()
+        
         while not rospy.is_shutdown():
-            key = raw_input("|Speed = "+ str(self.x) + " & Angular = " + str(self.y) + "|")
+            key = raw_input("|Speed = "+ str(self.x) + " & Angular = " + str(self.y) + "|\n")
             if key is "x":
                 self.x += -10
             if key is "s":
@@ -38,8 +38,8 @@ class Manual_testing:
                 self.y += 10
             if key is "a":
                 self.y += -10
-            self.y = self.y % 110
-            self.x = self.x % 110
+            self.y = self.y % 255
+            self.x = self.x % 255
             cmd_vel = {'x': self.x, 'y': self.y}
             
             cmd_velData = json.dumps(cmd_vel)

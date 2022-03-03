@@ -1,7 +1,6 @@
 import RPi.GPIO as GPIO
 import time
  
- 
 class UltrasonicSensor():
     
     def __init__(self):
@@ -10,12 +9,12 @@ class UltrasonicSensor():
         GPIO.setwarnings(False)
          
         #set GPIO Pins
-        self.GPIO_TRIGGER_B = 17
-        self.GPIO_ECHO_B = 23
+        self.GPIO_TRIGGER_B = 18
+        self.GPIO_ECHO_B = 24
         
         #set GPIO Pins
-        self.GPIO_TRIGGER_F = 18
-        self.GPIO_ECHO_F = 24
+        self.GPIO_TRIGGER_F = 17
+        self.GPIO_ECHO_F = 23
          
         #set GPIO direction (IN / OUT)
         GPIO.setup(self.GPIO_TRIGGER_B, GPIO.OUT)
@@ -51,7 +50,7 @@ class UltrasonicSensor():
         # multiply with the sonic speed (34300 cm/s)
         # and divide by 2, because there and back
         distance = (TimeElapsed * 34300) / 2
-        sleep(0.1)
+        time.sleep(0.1)
         return distance
     
     #retriteve the backward US distance
@@ -80,7 +79,7 @@ class UltrasonicSensor():
         # multiply with the sonic speed (34300 cm/s)
         # and divide by 2, because there and back
         distance = (TimeElapsed * 34300) / 2
-        sleep(0.1)
+        time.sleep(0.1)
         return distance
     
     def cleanup(self):
