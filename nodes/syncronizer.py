@@ -43,6 +43,10 @@ class Syncronizer():
             self.input_from_serial = self.md.write_read()
             # create the data packet for publishing as Robot_Sensor_State.
             sensor_state = Robot_Sensor_State()
+            sensor_state.ultrasonicFront = self.uS.distanceForward()
+            sensor_state.ultrasonicBack = self.uS.distanceBackward()
+            sensor_state.heading = self.cD.getHeading()
+            self.publisher_name.publish(sensor_state)
             rate.sleep()
 
 
