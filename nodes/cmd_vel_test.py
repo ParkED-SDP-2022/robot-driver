@@ -4,7 +4,7 @@ import json
 import random
 import rospy
 import sys
-from std_msgs.msg import String
+from std_msgs.msg import Twist
 
 class Manual_testing:
 
@@ -13,7 +13,7 @@ class Manual_testing:
 
         # initialize the node named image_processing
         rospy.init_node('Manual_testing', anonymous=True)
-        self.cmd_velPub = rospy.Publisher("/cmd_vel", String ,queue_size = 1)
+        self.cmd_velPub = rospy.Publisher("/cmd_vel", Twist ,queue_size = 1)
         print("Robot Control")
         print("     w     ")
         print("a    s    d")
@@ -40,10 +40,11 @@ class Manual_testing:
                 self.y += -10
             self.y = self.y % 255
             self.x = self.x % 255
-            cmd_vel = {'x': self.x, 'y': self.y}
-            
-            cmd_velData = json.dumps(cmd_vel)
-            self.cmd_velPub.publish(cmd_velData)
+            cmd_vel = Twist()
+            cmd_vel.linear.x = self.x
+            cmd_vel.angular.x = self.y
+
+            self.cmd_velPub.publish(cmd_vel)
             rate.sleep()
 
 # --------------------------------------------------------------------------------------------------------------
