@@ -48,7 +48,7 @@ class Syncronizer():
     def parse(self, raw_data):
         
         self.x = raw_data.linear.x
-        self.y = raw_data.angular.y
+        self.y = raw_data.angular.x
         
         print(str(self.x) + "|" + str(self.y))
         
