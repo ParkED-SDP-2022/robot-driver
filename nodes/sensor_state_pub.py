@@ -24,8 +24,10 @@ class Sensor_State_Pub():
         
 
         self.uS = UltrasonicSensor()
+        print('1')
         time.sleep(3)
         self.cD = CompassData()
+        print('2')
         
         self.sync()
 
@@ -33,10 +35,13 @@ class Sensor_State_Pub():
     def sync(self):
         rate = rospy.Rate(40)
         while not rospy.is_shutdown():
+            print('3')
             # create the data packet for publishing as Robot_Sensor_State.
             sensor_state = Robot_Sensor_State(Compass(self.cD.getHeading()), Ultrasonic_Sensor(self.uS.distanceForward()),
                                               Ultrasonic_Sensor(self.uS.distanceBackward()))
+            print('4')
             self.publisher_name.publish(sensor_state)
+            print('5')
             rate.sleep()
         
 if __name__ == '__main__':

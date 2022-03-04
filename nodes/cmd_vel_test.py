@@ -42,7 +42,7 @@ class Manual_testing:
             self.x = self.x % 255
             cmd_vel = Twist()
             cmd_vel.linear.x = self.x
-            cmd_vel.angular.x = self.y
+            cmd_vel.angular.z = self.y
 
             self.cmd_velPub.publish(cmd_vel)
             rate.sleep()
