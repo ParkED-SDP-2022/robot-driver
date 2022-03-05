@@ -82,7 +82,7 @@ class Motors(object):
         if angularVel<0:
             self.__setRightMotor(speed*(1 - angularVel))
             self.__setLeftMotor(speed*angularVel)
-        elif angularVel>=0:
+        elif angularVel>0:
             self.__setRightMotor(speed*(-angularVel))
             self.__setLeftMotor(speed*(angularVel - 1))
         else:
