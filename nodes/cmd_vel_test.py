@@ -35,14 +35,14 @@ class Manual_testing:
             if key is "w":
                 self.x += 10
             if key is "d":
-                self.y += 10
+                self.y += 0.1
             if key is "a":
-                self.y += -10
-            self.y = self.y % 255
+                self.y += -0.1
+            self.y = self.y % 1
             self.x = self.x % 255
             cmd_vel = Twist()
             cmd_vel.linear.x = self.x
-            cmd_vel.angular.z = self.y
+            cmd_vel.angular.z = self.y 
 
             self.cmd_velPub.publish(cmd_vel)
             rate.sleep()
