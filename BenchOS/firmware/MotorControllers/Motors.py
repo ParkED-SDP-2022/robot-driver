@@ -80,11 +80,11 @@ class Motors(object):
         # Angular velocity of 1 means we shift the linear velocity to right wheel
         # vice versa for -1
         if angularVel<0:
-            self.__setRightMotor(speed*(1 - angularVel))
+            self.__setRightMotor(speed*(angularVel)*-1)
             self.__setLeftMotor(speed*angularVel)
         elif angularVel>0:
-            self.__setRightMotor(speed*(-angularVel))
-            self.__setLeftMotor(speed*(angularVel - 1))
+            self.__setRightMotor(speed*(angularVel))
+            self.__setLeftMotor(speed*(angularVel)*-1)
         else:
             self.__setRightMotor(speed)
             self.__setLeftMotor(speed)
