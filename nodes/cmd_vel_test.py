@@ -28,18 +28,17 @@ class Manual_testing:
         while not rospy.is_shutdown():
             key = raw_input("|Speed = "+ str(self.x) + " & Angular = " + str(self.y) + "|\n")
             if key is "x":
-                self.x += -10
+                self.x = -1
             if key is "s":
                 self.x = 0
                 self.y = 0
             if key is "w":
-                self.x += 10
+                self.x = 1
             if key is "d":
-                self.y += 0.1
+                self.y = 40
             if key is "a":
-                self.y += -0.1
-            self.y = self.y % 1
-            self.x = self.x % 255
+                self.y = -40
+            
             cmd_vel = Twist()
             cmd_vel.linear.x = self.x
             cmd_vel.angular.z = self.y 

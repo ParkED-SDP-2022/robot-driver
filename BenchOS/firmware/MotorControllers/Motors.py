@@ -49,7 +49,6 @@ class Motors(object):
         cmd = [str(element) for element in commandPacket]
         cmdStr = (",".join(cmd))+"\n"
 
-        print("packet updated")
         return cmdStr
 
     def setTRexSlave(self, value):
@@ -74,7 +73,7 @@ class Motors(object):
         self.lmB = 0
         self.rmB = 0
         
-        if (speed+anglularVel) > 255 or (speed+anglularVel) < -255:
+        if (speed+angularVel) > 255 or (speed+angularVel) < -255:
             speed = speed - angularVel
         if speed >255 and angularVel == 0:
             speed = 255
@@ -83,8 +82,8 @@ class Motors(object):
             
         # Angular velocity of 1 means we shift the linear velocity to right wheel +1
 
-        self.__setRightMotor(speed*angularVel*-1)
-        self.__setLeftMotor(speed*angularVel)
+        self.__setRightMotor(speed+ angularVel*-1)
+        self.__setLeftMotor(speed+ angularVel)
 
     def stopMotors(self):
         self.lmB = 1

@@ -1,16 +1,10 @@
 <launch>
 
-  <node pkg="robot-driver" type="robot-driver" name="cmd_vel_test.py" 
+  <node pkg="robot-driver" type="cmd_vel_test.py" name="cmd_vel_test" 
 output="screen"/>
-	<node pkg="robot-driver" type="robot-driver" name="firmwareTest.py" 
+	<node pkg="robot-driver" type="sensor_state_pub.py" name="sensor_state_pub" 
 output="screen"/>
-	<node pkg="robot-driver" type="robot-driver" name="sensor_state_pub.py" 
-output="screen"/>
-	<node pkg="robot-driver" type="robot-driver" name="syncroniser.py" 
-output="screen"/>
-	<node pkg="robot-driver" type="robot-driver" name="test_action_client.py" 
-output="screen"/>
-	<node pkg="robot-driver" type="robot-driver" name="move_robot_as.py" 
+	<node pkg="robot-driver" type="syncronizer.py" name="syncronizer" 
 output="screen"/>
 
 </launch>
