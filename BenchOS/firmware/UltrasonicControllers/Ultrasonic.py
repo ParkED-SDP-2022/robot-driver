@@ -9,12 +9,12 @@ class UltrasonicSensor():
         GPIO.setwarnings(False)
          
         #set GPIO Pins
-        self.GPIO_TRIGGER_B = 18
-        self.GPIO_ECHO_B = 24
+        self.GPIO_TRIGGER_B = 17
+        self.GPIO_ECHO_B = 23
         
         #set GPIO Pins
-        self.GPIO_TRIGGER_FL = 17
-        self.GPIO_ECHO_FL = 23
+        self.GPIO_TRIGGER_FL = 18
+        self.GPIO_ECHO_FL = 24
         
         #set GPIO Pins
         self.GPIO_TRIGGER_FR = 22
@@ -113,6 +113,7 @@ class UltrasonicSensor():
         # multiply with the sonic speed (34300 cm/s)
         # and divide by 2, because there and back
         distance = (TimeElapsed * 34300) / 2
+        
         time.sleep(0.1)
         return distance
     
