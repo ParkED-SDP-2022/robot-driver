@@ -34,7 +34,8 @@ class Sensor_State_Pub():
         rate = rospy.Rate(40)
         while not rospy.is_shutdown():
             # create the data packet for publishing as Robot_Sensor_State.
-            sensor_state = Robot_Sensor_State(Compass(self.cD.getHeading()), Ultrasonic_Sensor(self.uS.distanceForward()),
+            sensor_state = Robot_Sensor_State(Compass(self.cD.getHeading()), Ultrasonic_Sensor(self.uS.distanceFLeft()),
+                                              Ultrasonic_Sensor(self.uS.distanceFRight()),
                                               Ultrasonic_Sensor(self.uS.distanceBackward()))
             self.publisher_name.publish(sensor_state)
             rate.sleep()

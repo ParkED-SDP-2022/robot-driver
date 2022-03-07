@@ -47,22 +47,17 @@ class Syncronizer():
     
     def parse(self, raw_data):
         
-        self.x = raw_data.linear.x
+        self.x = raw_data.linear.x # 0 | 1
         self.y = raw_data.angular.z
         
         print(str(self.x) + "|" + str(self.y))
         
-        self.md.setMotors(self.x, self.y)
-# Local planner will take care of this
+        if self.x = 1 and self.zeroed = False:
+                self.zeroed = True
+                self.md.setMotors(130, self.y)                
+        else:
+                self.md.setMotors(80, self.y)
 
-#         if self.x is 0 and self.y is 0:
-#             self.md.stopMotors()
-#             
-#         if self.uS.distanceForward() < 10 and self.x > 0:
-#             self.md.stopMotors()
-#         elif self.uS.distanceBackward() < 10 and self.x < 0:
-#             self.md.stopMotors()
-        # self.md.write_read()
         
 if __name__ == '__main__':
     bt = Syncronizer()
