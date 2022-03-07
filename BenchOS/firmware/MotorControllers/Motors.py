@@ -73,21 +73,18 @@ class Motors(object):
     def setMotors(self, speed, angularVel):
         self.lmB = 0
         self.rmB = 0
-        if speed>255:
-            speed=255
-        elif speed<-255:
-            speed=-255
-        # Angular velocity of 1 means we shift the linear velocity to right wheel
-        # vice versa for -1
-        if angularVel<0:
-            self.__setRightMotor(speed*(angularVel)*-1)
-            self.__setLeftMotor(speed*angularVel)
-        elif angularVel>0:
-            self.__setRightMotor(speed*(angularVel))
-            self.__setLeftMotor(speed*(angularVel)*-1)
-        else:
-            self.__setRightMotor(speed)
-            self.__setLeftMotor(speed)
+        
+        if (speed+anglularVel) > 255 or (speed+anglularVel) < -255:
+            speed = speed - angularVel
+        if speed >255 and angularVel == 0:
+            speed = 255
+        if speed <-255 and angularVel == 0:
+            speed = -255
+            
+        # Angular velocity of 1 means we shift the linear velocity to right wheel +1
+
+        self.__setRightMotor(speed*angularVel*-1)
+        self.__setLeftMotor(speed*angularVel)
 
     def stopMotors(self):
         self.lmB = 1
