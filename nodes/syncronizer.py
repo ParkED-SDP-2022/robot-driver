@@ -1,19 +1,13 @@
 #!/usr/bin/env python
 
-import imp
-import rospy
-import subprocess
-import numpy as np
-from std_msgs.msg import String
-import json
 import time
 
+import rospy
 from geometry_msgs.msg import Twist
 
 # OS libraries
-from BenchOS.firmware.CompassController.Compass import CompassData
 from BenchOS.firmware.MotorControllers.Motors import Motors
-from BenchOS.firmware.UltrasonicControllers.Ultrasonic import UltrasonicSensor
+
 
 class Syncronizer():
     def __init__(self):
@@ -32,6 +26,8 @@ class Syncronizer():
         self.x = None
         self.y = 0
         self.zeroed = 0
+        self.prev_x = 0
+        self.prev_y = 0
         self.rate = rospy.Rate(4)
         self.accel_in_progress = False
         self.sync()
@@ -47,59 +43,108 @@ class Syncronizer():
             self.rate.sleep()
 
     def runsmooth(self, x):
-        return x
+
+        speed = 110
+
+        #forward
+        if x == 1:
+            while True:
+                time.sleep(0.25)
+                self.md.setMotors(speed, 0)
+                lastl_fwd = self.input_from_serial[4]
+                lastr_fwd = self.input_from_serial[6]
+                time.sleep(0.25)
+
+                if lastl_fwd+10 >= self.input_from_serial[4] and lastr_fwd+10 >= self.input_from_serial[6]:
+                    self.md.stopMotors()
+                    speed += 10
+                else:
+                    self.md.setMotors(80, 0)
+                    break
+        #backward
+        elif x == 2:
+            while True:
+                time.sleep(0.25)
+                self.md.setMotors(-speed, 0)
+                lastl_bwd = self.input_from_serial[4]
+                lastr_bwd = self.input_from_serial[6]
+                time.sleep(0.25)
+
+                if lastl_bwd-10 >= self.input_from_serial[4] and lastr_bwd-10 <= self.input_from_serial[6]:
+                    self.md.stopMotors()
+                    speed += 10
+                else:
+                    self.md.setMotors(-80, 0)
+                    break
+        #stop left
+        elif x == 3:
+            while True:
+                time.sleep(0.25)
+                self.md.setMotors(0, -speed)
+                lastl_bwd = self.input_from_serial[4]
+                lastr_fwd = self.input_from_serial[6]
+                time.sleep(0.25)
+
+                if lastl_bwd - 10 <= self.input_from_serial[4] and lastr_fwd + 10 >= self.input_from_serial[6]:
+                    self.md.stopMotors()
+                    speed += 10
+                else:
+                    self.md.setMotors(0, -80)
+                    break
+        #stop right
+        elif x == 4:
+            while True:
+                time.sleep(0.25)
+                self.md.setMotors(0, speed)
+                lastl_fwd = self.input_from_serial[4]
+                lastr_bwd = self.input_from_serial[6]
+                time.sleep(0.25)
+
+                if lastl_fwd + 10 >= self.input_from_serial[4] and lastr_bwd - 10 <= self.input_from_serial[6]:
+                    self.md.stopMotors()
+                    speed += 10
+                else:
+                    self.md.setMotors(0, 80)
+                    break
+
     def callback(self, data):
         self.parse(data)
 
     def parse(self, raw_data):
-        
-        if (self.x == raw_data.linear.x and self.y == raw_data.angular.z):
-            return
+
         self.x = raw_data.linear.x # 0 | 1
-        self.y = raw_data.angular.z # -20 -> 20
+        self.y = raw_data.angular.z # 0 | 1
 
-        print(str(self.x) + "|" + str(self.y))
+        print("cmd x = "+str(self.x) + " | cmd y = " + str(self.y))
 
-        if self.x == 1: #and self.y == 0:
-            #self.runsmooth(1)
-             self.md.setMotors(140, self.y)
-             print()
-             self.accel_in_progress = True
-#              self.input_from_serial = self.md.write_read()
-             time.sleep(0.25)
-             self.md.setMotors(80, self.y)
-             self.accel_in_progress = False
-#              self.input_from_serial = self.md.write_read()
+        #check for any changes otherwise do nothing
+        if self.prev_x != self.x and self.prev_y != self.y:
+            if self.x == 1: #and self.y == 0:
+                self.runsmooth(1)
 
-        if self.x == -1: #and self.y == 0:
-            #self.runsmooth(2)
-             self.md.setMotors(-140, self.y)
-#              self.input_from_serial = self.md.write_read()
-             time.sleep(0.25)
-             self.md.setMotors(-80, self.y)
-#              self.input_from_serial = self.md.write_read()
-#              self.rate.sleep()
+            if self.x == -1: #and self.y == 0:
+                self.runsmooth(2)
 
-        #if self.x == 1 and self.y == 1:
-            #self.runsmooth(3)
+            if self.x == 1 and self.y == 1:
+                self.runsmooth(1)
 
-        #if self.x == -1 and self.y == 1:
-            #self.runsmooth(4)
+            if self.x == -1 and self.y == 1:
+                self.runsmooth(2)
 
-        #if self.x == 1 and self.y == -1:
-            #self.runsmooth(5)
+            if self.x == 1 and self.y == -1:
+                self.runsmooth(1)
 
-        #if self.x == -1 and self.y == -1:
-            #self.runsmooth(6)
+            if self.x == -1 and self.y == -1:
+                self.runsmooth(2)
 
-        if self.x == 0: #and self.y == 0:
-            self.md.setMotors(0,0)
+            if self.x == 0 and self.y == 0:
+                self.md.setMotors(0,0)
 
-        #if self.x == 0 and self.y == -1:
-            #self.runsmooth(7)
+            if self.x == 0 and self.y == -1:
+                self.runsmooth(3)
 
-        #if self.x == 0 and self.y == -1:
-            #self.runsmooth(8)
+            if self.x == 0 and self.y == 1:
+                self.runsmooth(4)
 
 if __name__ == '__main__':
     bt = Syncronizer()

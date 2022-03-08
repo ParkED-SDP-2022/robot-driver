@@ -1,4 +1,4 @@
-class PID()
+class PID():
 
     def __init__(self):
         # initialize stored data
