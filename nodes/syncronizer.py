@@ -25,14 +25,15 @@ class Syncronizer():
 
         self.input_from_serial = []
 
-        self.uS = UltrasonicSensor()
+        #self.uS = UltrasonicSensor()
         self.md = Motors()
         time.sleep(3)
-        self.cD = CompassData()
-        self.x = 0
+        #self.cD = CompassData()
+        self.x = None
         self.y = 0
         self.zeroed = 0
         self.rate = rospy.Rate(4)
+        self.accel_in_progress = False
         self.sync()
 
     # Continuously reads and writes data to and from the robot.
@@ -51,7 +52,9 @@ class Syncronizer():
         self.parse(data)
 
     def parse(self, raw_data):
-
+        
+        if (self.x == raw_data.linear.x and self.y == raw_data.angular.z):
+            return
         self.x = raw_data.linear.x # 0 | 1
         self.y = raw_data.angular.z # -20 -> 20
 
@@ -59,21 +62,23 @@ class Syncronizer():
 
         if self.x == 1: #and self.y == 0:
             #self.runsmooth(1)
-             self.md.setMotors(110, self.y)
+             self.md.setMotors(140, self.y)
+             print()
+             self.accel_in_progress = True
 #              self.input_from_serial = self.md.write_read()
-             self.rate.sleep()
+             time.sleep(0.25)
              self.md.setMotors(80, self.y)
+             self.accel_in_progress = False
 #              self.input_from_serial = self.md.write_read()
-             self.rate.sleep()
 
         if self.x == -1: #and self.y == 0:
             #self.runsmooth(2)
-             self.md.setMotors(-110, self.y)
+             self.md.setMotors(-140, self.y)
 #              self.input_from_serial = self.md.write_read()
-             self.rate.sleep()
+             time.sleep(0.25)
              self.md.setMotors(-80, self.y)
 #              self.input_from_serial = self.md.write_read()
-             self.rate.sleep()
+#              self.rate.sleep()
 
         #if self.x == 1 and self.y == 1:
             #self.runsmooth(3)
