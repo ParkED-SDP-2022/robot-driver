@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import BenchOS.firmware.MotorControllers.Motors
-from Motors import *
+from BenchOS.firmware.MotorControllers.Motors import *
 
 m = Motors()
 
