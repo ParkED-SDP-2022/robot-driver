@@ -3,15 +3,16 @@ class PID():
     def __init__(self):
         # initialize stored data
         self.e_prev = 0
-        self.t_prev = -100
+        self.t_prev = 0
         self.I = 0
+        self.Kp = 0
         return
 
     def PID(Kp, Ki, Kd, MV_Bar=80):
 
         # initial control
         MV = MV_Bar
-
+        self.Kp = Kp
         #enc
         #acc
         #cur
@@ -22,7 +23,7 @@ class PID():
             t, PV, SP = yield MV
 
             # PID calculations
-            e = SP - PV # e is error from accel and encoder - error should be velocity | curr vel - target
+            e = enc - encT # e is error from accel and encoder - error should be velocity | curr vel - target
 
             P = Kp * e #need to be multiplied by motor output - try use this only
             I = I + Ki * e * (t - t_prev) #use 3rd

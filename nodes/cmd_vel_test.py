@@ -35,9 +35,9 @@ class Manual_testing:
             if key is "w":
                 self.x = 1
             if key is "d":
-                self.y = 40
+                self.y = 1
             if key is "a":
-                self.y = -40
+                self.y = -1
             
             cmd_vel = Twist()
             cmd_vel.linear.x = self.x

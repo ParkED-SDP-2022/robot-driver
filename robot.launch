@@ -2,8 +2,6 @@
 
   <node pkg="robot-driver" type="cmd_vel_test.py" name="cmd_vel_test" 
 output="screen"/>
-	<node pkg="robot-driver" type="sensor_state_pub.py" name="sensor_state_pub" 
-output="screen"/>
 	<node pkg="robot-driver" type="syncronizer.py" name="syncronizer" 
 output="screen"/>
 

@@ -24,9 +24,8 @@ class Sensor_State_Pub():
         
         print('loading ultrasonic sensors')
         self.uS = UltrasonicSensor()
-        time.sleep(3)
-        print('loading compass data')
-        self.cD = CompassData()
+#         print('loading compass data')
+#         self.cD = CompassData()
         print('everything up and running')
         
         self.sync()
@@ -35,13 +34,13 @@ class Sensor_State_Pub():
     def sync(self):
         rate = rospy.Rate(40)
         while not rospy.is_shutdown():
-            print(self.cD.getHeading())
+            #print(self.cD.getHeading())
 #             print(self.uS.distanceFLeft())
             # create the data packet for publishing as Robot_Sensor_State.
 #             sensor_state = Robot_Sensor_State(Compass(self.cD.getHeading()), Ultrasonic_Sensor(self.uS.distanceFLeft()),
 #                                               Ultrasonic_Sensor(self.uS.distanceFRight()),
 #                                               Ultrasonic_Sensor(self.uS.distanceBackward()))
-            sensor_state = Robot_Sensor_State(Compass(self.cD.getHeading()), Ultrasonic_Sensor(250),
+            sensor_state = Robot_Sensor_State(Compass(180), Ultrasonic_Sensor(250),
                                               Ultrasonic_Sensor(250),
                                               Ultrasonic_Sensor(250))
             print(sensor_state)

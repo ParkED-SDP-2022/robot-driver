@@ -33,7 +33,7 @@ class Motors(object):
         self.servo5 = 0x00 #servo 4 Byte || must be set to 0 to disable servo pulses
         self.adV = 0x32 # 0-255 default 50
         self.impS = 0x32 #impact sensitivy word deault 50 | range 0 to 1023
-        self.lowB = 0x226 #low battery word || must be between 550 - 3000
+        self.lowB = 0x410 #low battery word || must be between 550 - 3000
         self.i2C = 0x07 #range 0 - 127 default 0x07
         self.clk = 0x01 # 0 = 100khz 1=400khz
 
@@ -81,8 +81,10 @@ class Motors(object):
     #--------------------------------------------------------------------------------------------
     #motor control functions
     def __setLeftMotor(self, speed):
+        self.lmB = 0
         self.lm = speed
     def __setRightMotor(self, speed):
+        self.rmB = 0
         self.rm = speed
 
     def setMotors(self, speed, angularVel):
@@ -169,16 +171,16 @@ class Motors(object):
 
     def write_read(self):
         cmd = self.updateCMD()
-        print(bytearray(cmd, "utf-8"))
         self.arduino.reset_input_buffer()
         self.arduino.reset_output_buffer()
         self.arduino.write(bytearray(cmd, "utf-8"))
-#         input_from_serial = map(int, (self.arduino.readline().split(',')))
+        output = []
         input_from_serial = self.arduino.readline()
-        print(input_from_serial)
-
+        string = input_from_serial.split(',')
+        for i in range(0, len(string)-1, 1):
+            output.append(int(string[i]))
         time.sleep(0.1)
-        return input_from_serial
+        return output
 
     #--------------------------------------------------------------------------------------------
 
