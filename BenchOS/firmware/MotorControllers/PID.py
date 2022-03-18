@@ -1,4 +1,4 @@
-class PID()
+class PID():
 
     def __init__(self):
         # initialize stored data
@@ -7,24 +7,28 @@ class PID()
         self.I = 0
         return
 
-    def PID(Kp, Ki, Kd, MV_bar=0):
-
+    def PID(Kp, Ki, Kd, MV_Bar=80):
 
         # initial control
-        MV = MV_bar
+        MV = MV_Bar
 
+        #enc
+        #acc
+        #cur
+
+        #vel | 0-255 | cruise 80 | moves 130
         while True:
             # yield MV, wait for new t, PV, SP
             t, PV, SP = yield MV
 
             # PID calculations
-            e = SP - PV
+            e = SP - PV # e is error from accel and encoder - error should be velocity | curr vel - target
 
-            P = Kp * e
-            I = I + Ki * e * (t - t_prev)
-            D = Kd * (e - e_prev) / (t - t_prev)
+            P = Kp * e #need to be multiplied by motor output - try use this only
+            I = I + Ki * e * (t - t_prev) #use 3rd
+            D = Kd * (e - e_prev) / (t - t_prev) #use second
 
-            MV = MV_bar + P + I + D
+            MV = P #+ I + D
 
             # update stored data for next iteration
             e_prev = e

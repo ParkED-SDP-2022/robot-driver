@@ -7,7 +7,8 @@ uS = UltrasonicSensor()
 
 try:
     while True:
-        print("Object "+str(uS.distanceForward())+"cm Forward")
+        print("Object "+str(uS.distanceFLeft())+"cm ForwardLeft")
+        print("Object "+str(uS.distanceFRight())+"cm ForwardRight")
         print("Object "+str(uS.distanceBackward())+"cm Backwards")
 
 except KeyboardInterrupt as e:

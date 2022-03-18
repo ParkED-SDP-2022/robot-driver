@@ -1,12 +1,8 @@
 #!/usr/bin/python3
 
-import os
 import time
-import numpy as np
-from smbus2 import SMBus, i2c_msg
 import serial
 from time import sleep
-from datetime import datetime
 
 class Motors(object):
     def __init__(self):
@@ -36,7 +32,7 @@ class Motors(object):
         self.servo4 = 0x00 #servo 4 Byte || must be set to 0 to disable servo pulses
         self.servo5 = 0x00 #servo 4 Byte || must be set to 0 to disable servo pulses
         self.adV = 0x32 # 0-255 default 50
-        self.impS = 0x00 #impact sensitivy Byte
+        self.impS = 0x32 #impact sensitivy word deault 50 | range 0 to 1023
         self.lowB = 0x226 #low battery word || must be between 550 - 3000
         self.i2C = 0x07 #range 0 - 127 default 0x07
         self.clk = 0x01 # 0 = 100khz 1=400khz
@@ -49,7 +45,6 @@ class Motors(object):
         cmd = [str(element) for element in commandPacket]
         cmdStr = (",".join(cmd))+"\n"
 
-        print("packet updated")
         return cmdStr
 
     def setTRexSlave(self, value):
@@ -62,6 +57,26 @@ class Motors(object):
         self.sb = value
         print("new sb = "+ str(value))
 
+    def setPWM(self, value):
+        print("old pwm = " + str(self.sb))
+        self.pwm = value
+        print("new pwm = " + str(value))
+
+    def setLowBattery(self, value):
+        print("old lowB = " + str(self.sb))
+        self.lowB = value
+        print("new lowB = " + str(value))
+
+    def setImpS(self, value):
+        print("old impS = " + str(self.sb))
+        self.impS = value
+        print("new impS = " + str(value))
+
+    def setAdv(self, value):
+        print("old adv = " + str(self.sb))
+        self.adv = value
+        print("new adv = " + str(value))
+
 
     #--------------------------------------------------------------------------------------------
     #motor control functions
@@ -73,21 +88,21 @@ class Motors(object):
     def setMotors(self, speed, angularVel):
         self.lmB = 0
         self.rmB = 0
-        if speed>255:
-            speed=255
-        elif speed<-255:
-            speed=-255
-        # Angular velocity of 1 means we shift the linear velocity to right wheel
-        # vice versa for -1
-        if angularVel<0:
-            self.__setRightMotor(speed*(1 - angularVel))
-            self.__setLeftMotor(speed*angularVel)
-        elif angularVel>=0:
-            self.__setRightMotor(speed*(-angularVel))
-            self.__setLeftMotor(speed*(angularVel - 1))
+        
+        if (speed+angularVel) > 255 or (speed+angularVel) < -255:
+            speed = speed - angularVel
+        if speed >255 and angularVel == 0:
+            speed = 255
+        if speed <-255 and angularVel == 0:
+            speed = -255
+            
+        # Angular velocity of 1 means we shift the linear velocity to right wheel +1
+        if speed >=0:
+            self.__setRightMotor(speed+ angularVel*-1)
+            self.__setLeftMotor(speed+ angularVel)
         else:
-            self.__setRightMotor(speed)
-            self.__setLeftMotor(speed)
+            self.__setRightMotor(speed + angularVel)
+            self.__setLeftMotor(speed + angularVel * -1)
 
     def stopMotors(self):
         self.lmB = 1
