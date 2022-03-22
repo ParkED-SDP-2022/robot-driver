@@ -1,7 +1,7 @@
-from Ultrasonic import UltrasonicSensor
 import time
+from GPIO import GPIO_Pins
 
-uS = UltrasonicSensor()
+uS = GPIO_Pins()
 # uS.setupForward()
 # uS.setupBackward()
 

@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 
 import imp
+import json
+import numpy as np
 import rospy
 import subprocess
-import numpy as np
-from std_msgs.msg import String
-import json
 import time
+from std_msgs.msg import String
+
 from BenchOS.firmware.CompassController.Compass import CompassData
+from BenchOS.firmware.GPIO.GPIO_Controller import GPIO_Pins
 from BenchOS.firmware.MotorControllers.Motors import Motors
-from BenchOS.firmware.UltrasonicControllers.Ultrasonic import UltrasonicSensor
+
 
 class BigTest():
     def __init__(self):
@@ -19,7 +21,7 @@ class BigTest():
         rospy.init_node('firmwareTest', anonymous = True)
         self.subscriber_name = rospy.Subscriber("/cmd_vel", String, self.callback)
         
-        self.uS = UltrasonicSensor()
+        self.uS = GPIO_Pins()
         self.md = Motors()
         time.sleep(3)
         self.cD = CompassData()

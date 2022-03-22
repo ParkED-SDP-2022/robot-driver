@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 
 import imp
+import json
+import numpy as np
 import rospy
 import subprocess
-import numpy as np
-import json
 import time
-
-from parked_custom_msgs.msg import Robot_Sensor_State, Ultrasonic_Sensor, Compass
 from geometry_msgs.msg import Twist
+from parked_custom_msgs.msg import Robot_Sensor_State, Ultrasonic_Sensor, Compass
 
 # OS libraries
 from BenchOS.firmware.CompassController.Compass import CompassData
-from BenchOS.firmware.UltrasonicControllers.Ultrasonic import UltrasonicSensor
+from BenchOS.firmware.GPIO.GPIO_Controller import GPIO_Pins
+
 
 class Sensor_State_Pub():
     def __init__(self):
@@ -23,7 +23,7 @@ class Sensor_State_Pub():
         self.publisher_name = rospy.Publisher('/bench_sensor_state', Robot_Sensor_State, queue_size=3)
         
         print('loading ultrasonic sensors')
-        self.uS = UltrasonicSensor()
+        self.uS = GPIO_Pins()
 #         print('loading compass data')
 #         self.cD = CompassData()
         print('everything up and running')

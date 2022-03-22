@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 
-import time
 import serial
+import time
 from time import sleep
+
 
 class Motors(object):
     def __init__(self):
@@ -11,7 +12,7 @@ class Motors(object):
         self.arduino = None
         while self.arduino == None:
             try:
-                self.arduino = serial.Serial(port='/dev/ttyACM'+str(i), baudrate=9600, timeout=0.1)
+                self.arduino = serial.Serial(port='/dev/ttyACM'+str(i), baudrate=115200, timeout=0.1)
                 print(i)
                 print(self.arduino)
             except:
@@ -40,7 +41,8 @@ class Motors(object):
         self.statusPacket = []
 
     def updateCMD(self):
-        commandPacket = [self.sb,self.pwm,self.lm,self.lmB,self.rm,self.rmB,self.servo0,self.servo1,self.servo2,self.servo3,self.servo4,self.servo5,self.adV,self.impS,self.lowB,self.i2C,self.clk]
+        commandPacket = [self.lm, self.rm]
+        #[self.sb,self.pwm,self.lm,self.lmB,self.rm,self.rmB,self.servo0,self.servo1,self.servo2,self.servo3,self.servo4,self.servo5,self.adV,self.impS,self.lowB,self.i2C,self.clk]
 
         cmd = [str(element) for element in commandPacket]
         cmdStr = (",".join(cmd))+"\n"
@@ -169,18 +171,18 @@ class Motors(object):
 
     #--------------------------------------------------------------------------------------------
 
-    def write_read(self):
+    def write(self):
         cmd = self.updateCMD()
         self.arduino.reset_input_buffer()
-        self.arduino.reset_output_buffer()
+        # self.arduino.reset_output_buffer()
         self.arduino.write(bytearray(cmd, "utf-8"))
-        output = []
-        input_from_serial = self.arduino.readline()
-        string = input_from_serial.split(',')
-        for i in range(0, len(string)-1, 1):
-            output.append(int(string[i]))
-        time.sleep(0.1)
-        return output
+        # output = []
+        # input_from_serial = self.arduino.readline()
+        # string = input_from_serial.split(',')
+        # for i in range(0, len(string)-1, 1):
+        #     output.append(int(string[i]))
+        # time.sleep(0.1)
+        # return output
 
     #--------------------------------------------------------------------------------------------
 
