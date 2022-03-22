@@ -16,7 +16,7 @@ from BenchOS.firmware.MotorControllers.Motors import Motors
 class BigTest():
     def __init__(self):
         
-#        cmd_vel_test = subprocess.Popen(["rosrun","robot-driver", "cmd_vel_test.py"])
+        cmd_vel_test = subprocess.Popen(["rosrun","robot-driver", "cmd_vel_test1.py"])
         
         rospy.init_node('firmwareTest', anonymous = True)
         self.subscriber_name = rospy.Subscriber("/cmd_vel", String, self.callback)
@@ -47,7 +47,8 @@ class BigTest():
             self.md.stopMotors()
         elif self.uS.distanceBackward() < 10 and self.x < 0:
             self.md.stopMotors()
-        self.md.write_read()
+
+        self.md.write()
         
 if __name__ == '__main__':
     bt = BigTest()
