@@ -72,4 +72,18 @@ if __name__ == '__main__':
                 
         
     except KeyboardInterrupt:
+        tuningPacket.dle = 0
+        tuningPacket.dre = 0
+        tuningPacket.pid_params = False
+        sendSize = 0    
+        sendSize = link.tx_obj(tuningPacket.dre, start_pos=sendSize)
+        sendSize = link.tx_obj(tuningPacket.dle, start_pos=sendSize)
+        sendSize = link.tx_obj(tuningPacket.pid_params, start_pos=sendSize)
+        sendSize = link.tx_obj(tuningPacket.kp_l, start_pos=sendSize)
+        sendSize = link.tx_obj(tuningPacket.ki_l, start_pos=sendSize)
+        sendSize = link.tx_obj(tuningPacket.kd_l, start_pos=sendSize)
+        sendSize = link.tx_obj(tuningPacket.kp_r, start_pos=sendSize)
+        sendSize = link.tx_obj(tuningPacket.ki_r, start_pos=sendSize)
+        sendSize = link.tx_obj(tuningPacket.kd_r, start_pos=sendSize)
+        link.send(sendSize)
         link.close()
