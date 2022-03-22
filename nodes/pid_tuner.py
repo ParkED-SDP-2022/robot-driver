@@ -53,6 +53,7 @@ if __name__ == '__main__':
                     break
                 elif ans == 0:
                     tuningPacket.pid_params = False
+                    break
                 else:
                     print('invalid value entered: {}'.format(ans))
 
