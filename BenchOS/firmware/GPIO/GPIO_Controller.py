@@ -9,8 +9,8 @@ class GPIO_Pins():
         GPIO.setwarnings(False)
          
         #set GPIO Pins
-        self.GPIO_TRIGGER_B = 17
-        self.GPIO_ECHO_B = 23
+        self.GPIO_TRIGGER_F = 17
+        self.GPIO_ECHO_F= 23
         
         #set GPIO Pins
         self.GPIO_TRIGGER_FL = 18
@@ -20,8 +20,13 @@ class GPIO_Pins():
         self.GPIO_TRIGGER_FR = 22
         self.GPIO_ECHO_FR = 25
 
-        self.FSR_Pin1 = 4
-        self.FSR_Pin2 = 5
+        #set GPIO Pins
+        self.GPIO_TRIGGER_B = 4
+        self.GPIO_ECHO_B = 27
+
+
+        self.FSR_Pin1 = 5
+        self.FSR_Pin2 = 6
          
         #set GPIO direction (IN / OUT)
         GPIO.setup(self.GPIO_TRIGGER_B, GPIO.OUT)
