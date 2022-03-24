@@ -34,11 +34,14 @@ class Manual_testing:
                 self.x = 0
                 self.y = 0
             if key is "w":
-                self.x += 10
+                self.x = 1
+                self.y = 0
             if key is "d":
-                self.y += 10
+                self.x = 0
+                self.y = 1
             if key is "a":
-                self.y += -10
+                self.x = 0
+                self.y = -1
             
             cmd_vel = Twist()
             cmd_vel.linear.x = self.x

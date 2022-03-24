@@ -90,23 +90,33 @@ class Motors(object):
         self.rm = speed
 
     def setMotors(self, speed, angularVel):
-        self.lmB = 0
-        self.rmB = 0
-        
-        if (speed+angularVel) > 255 or (speed+angularVel) < -255:
-            speed = speed - angularVel
-        if speed >255 and angularVel == 0:
-            speed = 255
-        if speed <-255 and angularVel == 0:
-            speed = -255
-            
-        # Angular velocity of 1 means we shift the linear velocity to right wheel +1
-        if speed >=0:
-            self.__setRightMotor(speed+ angularVel*-1)
-            self.__setLeftMotor(speed+ angularVel)
+#         self.lmB = 0
+#         self.rmB = 0
+#         
+#         if (speed+angularVel) > 255 or (speed+angularVel) < -255:
+#             speed = speed - angularVel
+#         if speed >255 and angularVel == 0:
+#             speed = 255
+#         if speed <-255 and angularVel == 0:
+#             speed = -255
+#             
+#         # Angular velocity of 1 means we shift the linear velocity to right wheel +1
+#         if speed >=0:
+#             self.__setRightMotor(speed+ angularVel*-1)
+#             self.__setLeftMotor(speed+ angularVel)
+#         else:
+#             self.__setRightMotor(speed + angularVel)
+#             self.__setLeftMotor(speed + angularVel * -1)
+
+        if speed != 0 and angularVel != 0:
+            return
+        if angularVel != 0:
+            self.__setRightMotor(-angularVel)
+            self.__setLeftMotor(angularVel)
         else:
-            self.__setRightMotor(speed + angularVel)
-            self.__setLeftMotor(speed + angularVel * -1)
+            self.__setRightMotor(speed)
+            self.__setLeftMotor(speed)
+            
 
     def stopMotors(self):
         self.lmB = 1
@@ -174,8 +184,10 @@ class Motors(object):
     def write(self):
         cmd = self.updateCMD()
         self.arduino.reset_input_buffer()
-        # self.arduino.reset_output_buffer()
+        self.arduino.reset_output_buffer()
         self.arduino.write(bytearray(cmd, "utf-8"))
+        self.arduino.reset_input_buffer()
+        self.arduino.reset_output_buffer()
         # output = []
         # input_from_serial = self.arduino.readline()
         # string = input_from_serial.split(',')

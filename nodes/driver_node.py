@@ -14,15 +14,16 @@ from BenchOS.firmware.MotorControllers.Motors import Motors
 
 
 class BigTest():
-    # CONSTANTS
-    LINEAR_FORWARDS_ENCODER_COUNT = 40
-    LINEAR_BACKWARDS_ENCODER_COUNT = -40
-    LINEAR_STATIONARY_ENCODER_COUNT = 0
-    ANGULAR_RIGHT_ENCODER_COUNT = 40
-    ANGULAR_LEFT_ENCODER_COUNT = -40
-    ANGULAR_STATIONARY_ENCODER_COUNT = 0
 
     def __init__(self):
+        
+         # CONSTANTS
+        self.LINEAR_FORWARDS_ENCODER_COUNT = 30
+        self.LINEAR_BACKWARDS_ENCODER_COUNT = -30
+        self.LINEAR_STATIONARY_ENCODER_COUNT = 0
+        self.ANGULAR_RIGHT_ENCODER_COUNT = 20
+        self.ANGULAR_LEFT_ENCODER_COUNT = -20
+        self.ANGULAR_STATIONARY_ENCODER_COUNT = 0
         
         cmd_vel_test = subprocess.Popen(["rosrun","robot-driver", "cmd_vel_test1.py"])
         
@@ -38,10 +39,10 @@ class BigTest():
         self.y = 0
 
     def callback(self, data):
-        self.x = LINEAR_FORWARDS_ENCODER_COUNT if data.linear.x > 0 else \
-            (LINEAR_BACKWARDS_ENCODER_COUNT if data.linear.x < 0 else LINEAR_STATIONARY_ENCODER_COUNT)
-        self.y = ANGULAR_RIGHT_ENCODER_COUNT if data.angular.z > 0 else \
-            (ANGULAR_LEFT_ENCODER_COUNT if data.angular.z < 0 else ANGULAR_STATIONARY_ENCODER_COUNT)
+        self.x = self.LINEAR_FORWARDS_ENCODER_COUNT if data.linear.x > 0 else \
+            (self.LINEAR_BACKWARDS_ENCODER_COUNT if data.linear.x < 0 else self.LINEAR_STATIONARY_ENCODER_COUNT)
+        self.y = self.ANGULAR_RIGHT_ENCODER_COUNT if data.angular.z > 0 else \
+            (self.ANGULAR_LEFT_ENCODER_COUNT if data.angular.z < 0 else self.ANGULAR_STATIONARY_ENCODER_COUNT)
         
         print(str(self.x) + "|" +str(self.y))
         
