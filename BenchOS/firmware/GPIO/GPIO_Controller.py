@@ -35,6 +35,8 @@ class GPIO_Pins():
         GPIO.setup(self.GPIO_ECHO_FL, GPIO.IN)
         GPIO.setup(self.GPIO_TRIGGER_FR, GPIO.OUT)
         GPIO.setup(self.GPIO_ECHO_FR, GPIO.IN)
+        GPIO.setup(self.GPIO_TRIGGER_F, GPIO.OUT)
+        GPIO.setup(self.GPIO_ECHO_F, GPIO.IN)
 
 
     def rc_time(FSR_Pin):
