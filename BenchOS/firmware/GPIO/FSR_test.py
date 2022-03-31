@@ -20,9 +20,9 @@ while True:
  
         # Illuminate onboard LED
         if sensor_value > 500:
-            grovepi.digitalWrite(led,1)
+            print("bench occupied")
         else:
-            grovepi.digitalWrite(led,0)
+            print("bench empty")
  
         print "sensor_value =", sensor_value
  
