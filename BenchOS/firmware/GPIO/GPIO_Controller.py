@@ -23,10 +23,6 @@ class GPIO_Pins():
         #set GPIO Pins
         self.GPIO_TRIGGER_B = 4
         self.GPIO_ECHO_B = 27
-
-
-        self.FSR_Pin1 = 5
-        self.FSR_Pin2 = 6
          
         #set GPIO direction (IN / OUT)
         GPIO.setup(self.GPIO_TRIGGER_B, GPIO.OUT)
@@ -36,27 +32,7 @@ class GPIO_Pins():
         GPIO.setup(self.GPIO_TRIGGER_FR, GPIO.OUT)
         GPIO.setup(self.GPIO_ECHO_FR, GPIO.IN)
         GPIO.setup(self.GPIO_TRIGGER_F, GPIO.OUT)
-        GPIO.setup(self.GPIO_ECHO_F, GPIO.IN)
-
-
-    def rc_time(FSR_Pin):
-        count = 0
-
-        # Output on the pin for
-        GPIO.setup(FSR_Pin, GPIO.OUT)
-        GPIO.output(FSR_Pin, GPIO.LOW)
-        time.sleep(0.1)
-
-        # Change the pin back to input
-        GPIO.setup(FSR_Pin, GPIO.IN)
-
-        # Count until the pin goes high
-        while (GPIO.input(FSR_Pin) == GPIO.LOW):
-            count += 1
-
-        return count
-
-    
+        GPIO.setup(self.GPIO_ECHO_F, GPIO.IN)    
     
 #retriteve the forward US distance
     def distanceF(self):
@@ -69,13 +45,14 @@ class GPIO_Pins():
      
         StartTime = time.time()
         StopTime = time.time()
+        InitTime = time.time()
      
         # save StartTime
-        while GPIO.input(self.GPIO_ECHO_F) == 0:
+        while GPIO.input(self.GPIO_ECHO_F) == 0 and InitTime + 0.01 > StartTime:
             StartTime = time.time()
      
         # save time of arrival
-        while GPIO.input(self.GPIO_ECHO_F) == 1:
+        while GPIO.input(self.GPIO_ECHO_F) == 1 and StartTime + 0.01 > time.time:
             StopTime = time.time()
      
         # time difference between start and arrival
@@ -100,11 +77,11 @@ class GPIO_Pins():
         StopTime = time.time()
      
         # save StartTime
-        while GPIO.input(self.GPIO_ECHO_FL) == 0:
+        while GPIO.input(self.GPIO_ECHO_FL) == 0 and InitTime + 0.01 > StartTime:
             StartTime = time.time()
      
         # save time of arrival
-        while GPIO.input(self.GPIO_ECHO_FL) == 1:
+        while GPIO.input(self.GPIO_ECHO_FL) == 1 and StartTime + 0.01 > time.time:
             StopTime = time.time()
      
         # time difference between start and arrival
@@ -128,11 +105,11 @@ class GPIO_Pins():
         StopTime = time.time()
      
         # save StartTime
-        while GPIO.input(self.GPIO_ECHO_FR) == 0:
+        while GPIO.input(self.GPIO_ECHO_FR) == 0 and InitTime + 0.01 > StartTime:
             StartTime = time.time()
      
         # save time of arrival
-        while GPIO.input(self.GPIO_ECHO_FR) == 1:
+        while GPIO.input(self.GPIO_ECHO_FR) == 1 and StartTime + 0.01 > time.time:
             StopTime = time.time()
      
         # time difference between start and arrival
@@ -157,11 +134,11 @@ class GPIO_Pins():
         StopTime = time.time()
      
         # save StartTime
-        while GPIO.input(self.GPIO_ECHO_B) == 0:
+        while GPIO.input(self.GPIO_ECHO_B) == 0 and InitTime + 0.01 > StartTime:
             StartTime = time.time()
      
         # save time of arrival
-        while GPIO.input(self.GPIO_ECHO_B) == 1:
+        while GPIO.input(self.GPIO_ECHO_B) == 1 and StartTime + 0.01 > time.time:
             StopTime = time.time()
      
         # time difference between start and arrival
