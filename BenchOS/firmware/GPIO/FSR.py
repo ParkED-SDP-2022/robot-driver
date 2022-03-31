@@ -4,7 +4,7 @@ import time
 from grove.adc import ADC
  
  
-class GroveSlidePotentiometer(ADC):
+class FSR(ADC):
     def __init__(self, channel):
         self.channel = channel
         self.adc = ADC()
@@ -14,7 +14,7 @@ class GroveSlidePotentiometer(ADC):
         return self.adc.read(self.channel)
  
  
-Grove = GroveSlidePotentiometer
+Grove = FSR
  
  
 def main():
@@ -22,7 +22,7 @@ def main():
         print('Usage: {} adc_channel'.format(sys.argv[0]))
         sys.exit(1)
  
-    sensor = GroveSlidePotentiometer(int(sys.argv[1]))
+    sensor = FSR(int(sys.argv[1]))
  
     while True:
         print('Slide potentiometer value: {}'.format(sensor.value))
